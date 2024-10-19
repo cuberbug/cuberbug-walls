@@ -1,17 +1,8 @@
 #!/usr/bin/bash
 
-# Определение текущей директории
-CURRENT_DIR=$(pwd)
+# Подключает конфигурацию с проверками и переменными
+source "$(dirname "$0")/scripts/config.sh"
 
-# Попытка найти эмулятор терминала
-TERMINAL="${TERMINAL:-$(command -v alacritty || command -v konsole || command -v gnome-terminal || command -v xterm)}"
-
-# Проверка, найден ли эмулятор
-if [ -z "$TERMINAL" ]; then
-    echo -e "\e[1;94m::\e[0m \e[31mОшибка:\e[0m Не удалось найти эмулятор терминала."
-    exit 1
-fi
-
-# Выводим найденный терминал
+# Выводит найденный терминал и запускает в нём скрипт
 echo -e "\e[1;94m::\e[0m \e[1mДля запуска используется терминал:\e[0m $TERMINAL"
-$TERMINAL -e $CURRENT_DIR/scripts/pull.sh
+$TERMINAL -e "$REPO_ROOT/scripts/pull.sh"
