@@ -11,6 +11,7 @@ cd "$REPO_ROOT" || exit 1
 echo -e "\e[1;94m::\e[0m Загрузка актуального состояния репозитория."
 if ! git pull "$@"; then
     echo -e "\e[31mОшибка:\e[0m Не удалось выполнить pull."
+    echo "Доступен ввод команд: >>"
     exec bash
 fi
 
