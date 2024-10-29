@@ -1,7 +1,13 @@
 #!/usr/bin/bash
 
+# Определяет корневую директорию репозитория
+REPO_ROOT="$(git rev-parse --show-toplevel)"
 # Пытается найти эмулятор терминала
 TERMINAL="${TERMINAL:-$(command -v alacritty || command -v konsole || command -v gnome-terminal || command -v xterm)}"
+
+# Подключает декор
+source "${REPO_ROOT}/scripts/decor.sh"
+
 
 # Проверяет, найден ли эмулятор
 if [ -z "$TERMINAL" ]; then
@@ -21,5 +27,4 @@ if ! git rev-parse --is-inside-work-tree &>/dev/null; then
     exit 1
 fi
 
-# Определяет корневую директорию репозитория
-REPO_ROOT="$(git rev-parse --show-toplevel)"
+
