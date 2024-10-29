@@ -21,6 +21,7 @@ fi
 echo -e "${BLUE_DECOR} Сохранение и отправка изменений"
 if ! git push "$@"; then
     echo -e "${BLUE_DECOR} ${ERROR_DECOR} Не удалось выполнить push."
+    echo -e "${D_GREEN}Доступен ввод команд:${D_CANCEL} >>"
     exec bash
 fi
 

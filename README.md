@@ -4,6 +4,8 @@
 
 Это моя личная коллекция обоев с анимешными девочками :3
 
+<img src="https://github.com/cuberbug/cuberbug_wallpapers/blob/main/wallpapers/other/photo_2024-02-29_05-59-13.jpg?raw=true">
+
 ---
 
 ### Управление репозиторием
