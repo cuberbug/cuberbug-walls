@@ -1,7 +1,6 @@
 #!/usr/bin/bash
 
 # Подключает конфигурацию с декором, проверками и переменными
-source "$(dirname "$0")/scripts/decor.sh"
 source "$(dirname "$0")/scripts/config.sh"
 
 if [[ $# -eq 0 ]]; then
