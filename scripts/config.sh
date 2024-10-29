@@ -1,8 +1,5 @@
 #!/usr/bin/bash
 
-# Подключает оформление
-source "$(dirname "$0")/scripts/decor.sh"
-
 # Пытается найти эмулятор терминала
 TERMINAL="${TERMINAL:-$(command -v alacritty || command -v konsole || command -v gnome-terminal || command -v xterm)}"
 
