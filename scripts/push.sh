@@ -1,30 +1,31 @@
 #!/usr/bin/bash
 
-# Определяет корневую директорию репозитория
+# Определяет корневую директорию репозитория и переходит в неё
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-
-# Перейти в корневую директорию
 cd "$REPO_ROOT" || exit 1
+
+# Подключает декор
+source "${REPO_ROOT}/scripts/config.sh"
 
 
 ## Взаимодействие с Git
 if git diff --quiet && git diff --cached --quiet; then
-    echo -e "\e[1;94m::\e[0m \e[33mНет изменений для коммита.\e[0m"
+    echo -e "${BLUE_DECOR} ${D_ORANGE}Нет изменений для коммита.${D_CANCEL}"
 else
     DATE_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
-    echo -e "\e[1;94m::\e[0m Создание коммита"
+    echo -e "${BLUE_DECOR} Создание коммита"
     git add .
     git commit -m "Auto: $DATE_TIME"
 fi
 
-echo -e "\e[1;94m::\e[0m Сохранение и отправка изменений"
+echo -e "${BLUE_DECOR} Сохранение и отправка изменений"
 if ! git push "$@"; then
-    echo -e "\e[31mОшибка:\e[0m Не удалось выполнить push."
+    echo -e "${BLUE_DECOR} ${ERROR_DECOR} Не удалось выполнить push."
     exec bash
 fi
 
 
 ## Завершение
-echo -e "\e[1;94m::\e[0m \e[1;92mГотово!\e[0m"
-echo -e "\e[1mНажмите любую клавишу для закрытия окна:\e[0m"
+echo -e "${BLUE_DECOR} ${COMPLETE_DECOR}"
+echo -e "${D_BOLD}Нажмите любую клавишу для закрытия окна:${D_CANCEL}"
 read -n 1 -s -r
