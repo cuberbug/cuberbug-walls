@@ -3,7 +3,7 @@
 # Определяет корневую директорию репозитория
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 # Пытается найти эмулятор терминала
-TERMINAL="${TERMINAL:-$(command -v alacritty || command -v konsole || command -v gnome-terminal || command -v xterm)}"
+TERMINAL="${TERMINAL:-$(command -v alacritty || command -v konsole || command -v gnome-console || command -v gnome-terminal || command -v xterm)}"
 
 # Подключает декор
 source "${REPO_ROOT}/scripts/decor.sh"
@@ -26,5 +26,3 @@ if ! git rev-parse --is-inside-work-tree &>/dev/null; then
     echo -e "${BLUE_DECOR} ${ERROR_DECOR} Не найден Git-репозиторий."
     exit 1
 fi
-
-
