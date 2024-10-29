@@ -16,6 +16,16 @@
 
 При запуске `Сохранить.sh` из терминала доступно указание параметров для команды `git push <параметр>`
 
+### Поддерживаемые терминалы
+
+- <img src="https://alacritty.org/alacritty-simple.svg" width="24" height="24"> Alacritty
+- <img src="https://konsole.kde.org/assets/img/app_icon.png" width="24" height="24"> Konsole
+- <img src="https://gitlab.gnome.org/uploads/-/system/project/avatar/1892/gt.png?width=48" width="24" height="24"> GNOME Terminal
+- <img src="https://gitlab.gnome.org/GNOME/console/-/avatar?width=48" width="24" height="24"> Console
+- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Icon_of_XTerm_%28from_2012%29.svg/120px-Icon_of_XTerm_%28from_2012%29.svg.png" width="24" height="24"> xterm
+
+Если вашего терминала нет, то сообщите мне, я добавлю.
+
 ---
 
 ### Спасибо? Спасибо!
