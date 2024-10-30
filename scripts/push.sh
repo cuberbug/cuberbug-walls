@@ -9,7 +9,7 @@ source "${REPO_ROOT}/scripts/config.sh"
 
 
 ## Взаимодействие с Git
-if git diff --quiet && git diff --cached --quiet; then
+if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
     echo -e "${BLUE_DECOR} ${D_ORANGE}Нет изменений для коммита.${D_CANCEL}"
 else
     DATE_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
