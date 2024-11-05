@@ -3,7 +3,7 @@
 # Хранит константы для оформления и работы с текстом
 
 
-BOLD_DARK_RED="\e[1:31m"
+BOLD_DARK_RED="\e[1;31m"
 BOLD_DARK_BLUE="\e[1;94m"
 BOLD_GREEN="\e[1;92m"
 
