@@ -9,15 +9,15 @@ source "${REPO_ROOT}/scripts/config.sh"
 
 
 ## Взаимодействие с Git
-echo -e "${BLUE_DECOR} Загрузка актуального состояния репозитория."
+echo -e "${DECOR_BLUE} Загрузка актуального состояния репозитория."
 if ! git pull "$@"; then
-    echo -e "${BLUE_DECOR} ${ERROR_DECOR} Не удалось выполнить pull."
-    echo -e "${D_GREEN}Доступен ввод команд:${D_CANCEL} >>"
+    echo -e "${DECOR_BLUE} ${DECOR_ERROR} Не удалось выполнить pull."
+    echo -e "${FG_GREEN}Доступен ввод команд:${RESET} >>"
     exec bash
 fi
 
 
 ## Завершение
-echo -e "${BLUE_DECOR} ${COMPLETE_DECOR}"
-echo -e "${D_BOLD}Нажмите любую клавишу для закрытия окна:${D_CANCEL}"
+echo -e "${DECOR_BLUE} ${DECOR_SUCCESS}"
+echo -e "${BOLD}Нажмите любую клавишу для закрытия окна:${RESET}"
 read -n 1 -s -r
