@@ -5,6 +5,8 @@ import os
 SUPPORTED_EXTENSIONS: set = {
     '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp'
 }
+LENGTH_UNIX_TIME: int = 10
+
 
 def is_image(filepath: str) -> bool:
     """
@@ -32,13 +34,18 @@ def is_already_renamed(filename: str) -> bool:
     """
     try:
         name, extension = os.path.splitext(filename)
-        # Проверяем, является ли имя файла числом и находится ли расширение в списке.
-        if int(name) and extension.lower() in SUPPORTED_EXTENSIONS and len(name) == 10:
+        # Проверяем, является ли имя файла числом, имеет ли правильную длину
+        # и находится ли расширение в списке.
+        if (
+            name.isdigit() # Проверяем, что строка состоит только из цифр
+            and len(name) == LENGTH_UNIX_TIME
+            and extension.lower() in SUPPORTED_EXTENSIONS
+        ):
             return True
         return False
     except (ValueError, IndexError):
-        # Если int(name) вызывает ошибку, значит, имя не является числом.
-        # Если splitext возвращает не 2 элемента, значит, что-то не так с именем файла.
+        # Эта часть кода уже не сработает из-за name.isdigit(), но лучше оставить,
+        # так как она по-прежнему полезна
         return False
 
 
