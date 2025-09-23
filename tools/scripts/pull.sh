@@ -5,7 +5,7 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT" || exit 1
 
 # Подключает декор
-source "${REPO_ROOT}/scripts/config.sh"
+source "${REPO_ROOT}/tools/scripts/config.sh"
 
 
 ## Взаимодействие с Git
