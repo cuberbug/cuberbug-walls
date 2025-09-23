@@ -6,7 +6,7 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 TERMINAL="${TERMINAL:-$(command -v alacritty || command -v konsole || command -v gnome-console || command -v gnome-terminal || command -v xterm)}"
 
 # Подключает декор
-source "${REPO_ROOT}/scripts/decor.sh"
+source "${REPO_ROOT}/tools/scripts/decor.sh"
 
 
 # Проверяет, найден ли эмулятор
