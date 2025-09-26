@@ -55,6 +55,5 @@ fi
 
 
 # Завершение
-echo -e "${DECOR_BLUE} ${DECOR_SUCCESS}"
 echo -e "${BOLD}Нажмите любую клавишу для закрытия окна:${RESET}"
 read -n 1 -s -r
