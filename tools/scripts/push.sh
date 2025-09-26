@@ -1,17 +1,30 @@
 #!/usr/bin/env bash
 
 # Определяет корневую директорию репозитория и переходит в неё
-REPO_ROOT="$(git rev-parse --show-toplevel)"
-cd "$REPO_ROOT" || exit 1
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Подключает конфигурацию с декором, проверками и переменными
-if ! source "${REPO_ROOT}/tools/scripts/config.sh"; then
+if ! source "$SCRIPT_DIR/config.sh"; then
     echo "Не удалось подключить decor.sh." >&2
     exit 1
 fi
 
+# Подключает дополнительные инструменты
+# TERMINAL: переменная, в которой записан путь до бинаркика первого найденного эмулятора терминала.
+# confirm "str": Обёртка, которая запрашивает подтверждение выполняемых действий (по умолчанию "Y").
+# refuse "str": Обёртка, аналогичная confirm, только со значением по умолчанию "N".
+if [[ -d "$SCRIPT_DIR" ]]; then
+    source "${SCRIPT_DIR}/utils.sh"
+else
+    echo "Не удалось подключить utils.sh." >&2
+    exit 1
+fi
 
 # === Git === #
+
+# Определяет корневую директорию репозитория и переходит в неё
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT" || exit 1
 
 
 if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
