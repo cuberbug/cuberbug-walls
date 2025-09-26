@@ -4,8 +4,10 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Подключает конфигурацию с декором, проверками и переменными
-if ! source "$SCRIPT_DIR/config.sh"; then
-    echo "Не удалось подключить decor.sh." >&2
+if [[ -d "$SCRIPT_DIR" ]]; then
+    source "${SCRIPT_DIR}/config.sh"
+else
+    echo "Не удалось подключить config.sh" >&2
     exit 1
 fi
 
@@ -16,7 +18,7 @@ fi
 if [[ -d "$SCRIPT_DIR" ]]; then
     source "${SCRIPT_DIR}/utils.sh"
 else
-    echo "Не удалось подключить utils.sh." >&2
+    echo "Не удалось подключить utils.sh" >&2
     exit 1
 fi
 
@@ -34,21 +36,21 @@ else
     echo -e "${DECOR_BLUE} Создание коммита"
     git add .
     git commit -m "Auto: $DATE_TIME"
-    echo -e "${DECOR_BLUE} ${DECOR_SUCCESS}Коммит создан.${RESET}"
+    echo -e "${DECOR_BLUE} ${FG_GREEN}Коммит создан.${RESET}"
 fi
 
 git status
 
 if confirm "Отправить изменения в репозиторий"; then
-    echo -e "${DECOR_BLUE} Сохранение и отправка изменений"
+    echo -e "${DECOR_BLUE} Сохранение и отправка изменений..."
     if ! git push "$@"; then
-        echo -e "${DECOR_BLUE} ${DECOR_ERROR} Не удалось выполнить push."
+        echo -e "${DECOR_BLUE} ${DECOR_ERROR} Не удалось выполнить push"
         echo -e "${FG_GREEN}Доступен ввод команд:${RESET} >>"
         exec bash
     fi
-    echo -e "${DECOR_BLUE} ${DECOR_SUCCESS}Изменения отправлены.${RESET}"
+    echo -e "${DECOR_BLUE} ${FG_GREEN}Изменения отправлены${RESET}"
 else
-    echo -e "${DECOR_BLUE} ${DECOR_ERROR}Отмена.${RESET}"
+    echo -e "${DECOR_YELLOW} ${FG_YELLOW}Отмена${RESET}"
 fi
 
 
