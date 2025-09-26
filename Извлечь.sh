@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
 # Определяет директорию исполняемого файла и переходит в неё
-SCRIPT_DIR=$(dirname "$(realpath "$0")")
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo -e "Сохранить: SCRIPT_DIR: ${SCRIPT_DIR}"
 
 # Подключает конфигурацию с декором, проверками и переменными
-if ! source "${SCRIPT_DIR}/tools/scripts/config.sh"; then
+if [[ -d "$SCRIPT_DIR" ]]; then
+    source "${SCRIPT_DIR}/tools/scripts/config.sh"
+else
     echo "Не удалось подключить config.sh." >&2
     exit 1
 fi
