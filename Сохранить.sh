@@ -22,5 +22,4 @@ fi
 
 # Выводит найденный терминал и запускает в нём скрипт
 echo -e "${DECOR_BLUE} ${BOLD}Для запуска используется терминал:${RESET} $TERMINAL"
-echo -e "REPO_ROOT: $REPO_ROOT"
 $TERMINAL -e "$REPO_ROOT/tools/scripts/push.sh" "${@}"

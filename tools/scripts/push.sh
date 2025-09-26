@@ -47,7 +47,7 @@ if confirm "Отправить изменения в репозиторий"; th
         exec bash
     fi
     echo -e "${DECOR_BLUE} ${DECOR_SUCCESS}Изменения отправлены.${RESET}"
-fi else
+else
     echo -e "${DECOR_BLUE} ${DECOR_ERROR}Отмена.${RESET}"
 fi
 
