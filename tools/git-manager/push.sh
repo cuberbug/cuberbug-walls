@@ -7,14 +7,21 @@ cd "$REPO_ROOT" || exit 1
 
 # --- Git ---
 
-if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
-    echo -e "${DECOR_BLUE} ${FG_YELLOW}Нет изменений для коммита${RESET}"
+git status
+
+
+if confirm "Составить автоматический коммит"; then
+    if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+        echo -e "${DECOR_BLUE} ${FG_YELLOW}Нет изменений для коммита${RESET}"
+    else
+        DATE_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
+        echo -e "${DECOR_BLUE} Создание коммита..."
+        git add .
+        git commit -m "Auto: $DATE_TIME"
+        echo -e "${DECOR_BLUE} ${FG_GREEN}Коммит создан${RESET}"
+    fi
 else
-    DATE_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
-    echo -e "${DECOR_BLUE} Создание коммита..."
-    git add .
-    git commit -m "Auto: $DATE_TIME"
-    echo -e "${DECOR_BLUE} ${FG_GREEN}Коммит создан${RESET}"
+    echo -e "${DECOR_YELLOW} ${FG_YELLOW}Отмена${RESET}"
 fi
 
 
