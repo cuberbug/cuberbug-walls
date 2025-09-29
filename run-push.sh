@@ -6,7 +6,15 @@ set -o pipefail
 
 # Функция для поиска первого доступного терминала из списка
 find_terminal() {
-    local terminals_to_check=("konsole" "gnome-terminal" "alacritty" "kitty" "gnome-console" "xterm")
+    local terminals_to_check=(
+        "konsole"        # Многофункциональный терминал для среды KDE
+        "gnome-terminal" # Стандартный терминал для среды GNOME
+        "gnome-console"  # Легковесный терминал для GNOME, замена gnome-terminal
+        "xfce4-terminal" # Легковесный терминал, идущий в комплекте с XFCE
+        "kitty"          # Быстрый, настраиваемый терминал с поддержкой GPU
+        "alacritty"      # Легковесный, высокопроизводительный терминал с акцентом на простоту
+        "xterm"          # Классический, минималистичный терминал для X Window System
+    )
 
     for terminal in "${terminals_to_check[@]}"; do
         if command -v "$terminal" &>/dev/null; then
