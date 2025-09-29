@@ -29,6 +29,12 @@ if ! git rev-parse --is-inside-work-tree &>/dev/null; then
     exit 1
 fi
 
+# Проверяет, что gum установлен
+if ! command -v gum &>/dev/null; then
+    echo -e "${DECOR_ERROR} Gum не установлен. Этот пакет является обязательной зависимостью, установите его." >&2
+    exit 1
+fi
+
 
 # --- Глобальные переменные ---
 
