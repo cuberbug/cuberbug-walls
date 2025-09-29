@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -o errexit
 set -o nounset
 set -o pipefail
@@ -28,15 +27,14 @@ find_terminal() {
 
 # Определяет корневую директорию репозитория и терминал для запуска основной логики
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-TARGET_SCRIPT="${REPO_ROOT}/tools/git-manager/pull.sh"
+TARGET_SCRIPT="${REPO_ROOT}/tools/menu.sh"
 TERMINAL=$(find_terminal)
 
 if [[ -z "$TERMINAL" ]]; then
-    # Используем >&2 для вывода ошибок в stderr
     echo "Ошибка: Не удалось найти поддерживаемый эмулятор терминала." >&2
     exit 1
 fi
 
 # Запускает скрипт с основной логикой в новом окне терминала
-echo ":: Запуск push-сценария в новом окне ($TERMINAL)..."
+echo ":: Запуск интерактивного меню в новом окне ($TERMINAL)..."
 $TERMINAL -e "$TARGET_SCRIPT"
