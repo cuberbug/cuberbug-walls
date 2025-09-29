@@ -7,6 +7,12 @@ set -o pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/git-manager/common.sh" || exit 1
 cd "$REPO_ROOT" || exit 1
 
+# Проверяет, что gum установлен
+if ! command -v gum &>/dev/null; then
+    echo -e "${DECOR_ERROR} Gum не установлен. Этот пакет является обязательной зависимостью для меню." >&2
+    exit 1
+fi
+
 
 # --- Главный цикл меню ---
 
