@@ -14,8 +14,8 @@
 
 ### Зависимости
 
-- [Git](https://git-scm.com)
-- [Python](https://www.python.org)
+- <img src="https://www.svgrepo.com/show/303548/git-icon-logo.svg" width="16" height="16"> [Git](https://git-scm.com)
+- <img src="https://www.svgrepo.com/show/452091/python.svg" width="16" height="16"> [Python](https://www.python.org)
 - <img src="https://avatars.githubusercontent.com/u/57376114?s=48&v=4" width="16" height="16"> [gum](https://github.com/charmbracelet/gum) — инструмент для оформления TUI, используется в `manager.sh`
 
 ### Git-manager
