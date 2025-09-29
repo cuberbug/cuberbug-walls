@@ -14,8 +14,8 @@
 
 ### Зависимости
 
-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAMFBMVEVHcEz0TCf5TijxSyb1TSf5TifrSSX2TSf0TCf2TSf6TijrSSX0TCf4TSf7TyjsSSU79qcKAAAADHRSTlMA4e4iR1YQO820ZICAJSLHAAAA6ElEQVQokXWSWRLEIAhEAfdE9P63HcDSLGO6kvy8NNIIwE0+Zw8fCtQahW/2SQ+DDTc0+En/vYEwwdH7jiZmFhpdMXN6+FiVHYAbpcO9pkFUmF/nBmSuVd7z6nnSgEqEcY3RPxMpEypP6zGK48g4vYmqSZ0CO3pwo2dKMH36UcglAkTLi5DrFPOA2rPBLMEWHc56upGH5C+Py2qQKyI3bmhXu6hGsVCNJ7tolyGcnce01kr4ca7NNhuj27okgzZbZK38uBZntEh8M7rXhVrl3nWMlOClKxFu1nPSHZt0z0Yi+lx5V8qjzx+XBhDROe95mQAAAABJRU5ErkJggg==" width="16" height="16"> [Git](https://git-scm.com)
-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAh1BMVEVHcEwBVJc3caE2bJdKir3z2mL/6m05daZAfa5Jd5nsyUUqbKFHZ3flw0Towzv+2Uz842rmwTgANYDeuzlFgrL/6nD94WL20ETvxzf50T5Jh7lAfKxAf7E9eqv/5GX/4Fz/6HH/3VNFhbc1cKD/2kowapr/1Dj/10H+/v786a2dt851nL7c5OukoiX2AAAAHHRSTlMAf0dz/ovF/qRkVcoZX2noqUpnMo7r88Ww1sbqk9MnjgAAAR1JREFUKJFl0etygyAQBWCCEIJGozE1TWu9C8b2/Z+vsEscA+ef882RXSBky5nKKJL0TMJINrBhGOr6JwmYMrYCmQhfb8PfstYWhRhlgOvya3vCYBRgPWJPjAHSEwTsDeVpC9h8zfOc41RfjMES7p/jPF8/uq6r4DSwGocBQ2y4Qay5JcAsNk1zMZcW2iwNtW1rr2Yz4eyQg/UlkS9LDi4SrO/7AtGY5EeXCmr9NMWE4qDRscM0rjZNuiQEl0h3BLVJa7PKNxzI/ZrWd4ORHRTwVQNTqrBXlJgdLL79UqlP9yJSUg5WZbFNmmVZsXsZjqddbHTqvSffJmmVynx0p6nn8gwwdZMAFh6SOy6n1DbnW/eB9PDHcSnjotx//wNQ0jN2CWQnkAAAAABJRU5ErkJggg==" width="16" height="16"> [Python](https://www.python.org)
+- [Git](https://git-scm.com)
+- [Python](https://www.python.org)
 - <img src="https://avatars.githubusercontent.com/u/57376114?s=48&v=4" width="16" height="16"> [gum](https://github.com/charmbracelet/gum) — инструмент для оформления TUI, используется в `manager.sh`
 
 ### Git-manager
