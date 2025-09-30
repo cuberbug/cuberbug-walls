@@ -5,7 +5,7 @@
 confirm() {
     local message=$1
     while true; do
-        read -p "$(echo -e "${DECOR_BLUE} ${BOLD}${message}?${RESET} [Y/n]: ")" response
+        read -p "$(echo -e "\n${DECOR_BLUE} ${BOLD}${message}?${RESET} [Y/n]: ")" response
         case "$response" in
             [Yy]* | "") return 0 ;;
             [Nn]* ) return 1 ;;
@@ -19,7 +19,7 @@ confirm() {
 refuse() {
     local message=$1
     while true; do
-        read -p "$(echo -e "${DECOR_BLUE} ${BOLD}${message}?${RESET} [Y/n]: ")" response
+        read -p "$(echo -e "\n${DECOR_BLUE} ${BOLD}${message}?${RESET} [y/N]: ")" response
         case "$response" in
             [Yy]* ) return 0 ;;
             [Nn]* | "") return 1 ;;
