@@ -14,40 +14,44 @@ if ! command -v gum &>/dev/null; then
 fi
 
 
+# --- Настройки меню ---
+
+MENU_OPTIONS=(
+    "Сохранить (git push)"
+    "Обновить (git pull)"
+    "Утилита для переименования"
+    "Выход"
+)
+
+
 # --- Главный цикл меню ---
 
 while true; do
     clear
     
     # Использует 'gum choose' для создания интерактивного меню
-    # --height 10 задаёт высоту окна меню
-    CHOICE=$(gum choose --height 10 \
-        "Сохранить (git push)" \
-        "Обновить (git pull)" \
-        "Утилита для переименования" \
-        "Выход")
+    CHOICE=$(gum choose "${MENU_OPTIONS[@]}")
 
-    # Обрабатываем выбор пользователя
     case "$CHOICE" in
-        "Сохранить (git push)")
+        "${MENU_OPTIONS[0]}") # Сохранить (git push)
             "$REPO_ROOT/tools/git-manager/push.sh"
             ;;
 
-        "Обновить (git pull)")
+        "${MENU_OPTIONS[1]}") # Обновить (git pull)
             "$REPO_ROOT/tools/git-manager/pull.sh"
             ;;
 
-        "Утилита для переименования")
+        "${MENU_OPTIONS[2]}")  # Утилита для переименования
             echo -e "${DECOR_YELLOW} Эта функция пока в разработке...${RESET}"
             ;;
 
-        "Выход")
+        "${MENU_OPTIONS[3]}")  # Выход
             break
             ;;
     esac
 
     # --- Меню после действия ---
-    # Если был выбран не "Выход", показываем это меню
+    # Если был выбран не "Выход", показывает это меню
     if [[ "$CHOICE" != "Выход" ]]; then
         gum confirm "Вернуться в главное меню?" && continue || break
     fi
