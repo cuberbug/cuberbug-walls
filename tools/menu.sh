@@ -17,10 +17,10 @@ fi
 # --- Настройки меню ---
 
 MENU_OPTIONS=(
-    "Сохранить (git push)"
-    "Обновить (git pull)"
-    "Утилита для переименования (в разработке)"
-    "Выход"
+    "Выход"                          # [0] Всегда должен быть первым элементом массива
+    "Сохранить (git push)"           # [1]
+    "Обновить (git pull)"            # [2]
+    "Переименовать обои по шаблону"  # [3]
 )
 
 
@@ -28,31 +28,35 @@ MENU_OPTIONS=(
 
 while true; do
     clear
-    
-    # Использует 'gum choose' для создания интерактивного меню
-    CHOICE=$(gum choose "${MENU_OPTIONS[@]}")
+
+    # Создаём временный массив для отображения:
+    # Сначала все элементы с 1-го до конца, а в конец добавляет 0-й элемент.
+    DISPLAY_OPTIONS=("${MENU_OPTIONS[@]:1}" "${MENU_OPTIONS[0]}")
+
+    # Передаёт в gum choose отсортированный для показа массив.
+    CHOICE=$(gum choose "${DISPLAY_OPTIONS[@]}")
 
     case "$CHOICE" in
-        "${MENU_OPTIONS[0]}") # Сохранить (git push)
+        "${MENU_OPTIONS[1]}") # Сохранить (git push)
             "$REPO_ROOT/tools/git-manager/push.sh"
             ;;
 
-        "${MENU_OPTIONS[1]}") # Обновить (git pull)
+        "${MENU_OPTIONS[2]}") # Обновить (git pull)
             "$REPO_ROOT/tools/git-manager/pull.sh"
             ;;
 
-        "${MENU_OPTIONS[2]}")  # Утилита для переименования
-            echo -e "${DECOR_YELLOW} Фича пока что доступна только при ручном запуске, подробнее в ./tools/renamer/README.md${RESET}"
+        "${MENU_OPTIONS[3]}")  # Утилита для переименования
+            "$REPO_ROOT/tools/renamer/run-for-wallpapers.sh"
             ;;
 
-        "${MENU_OPTIONS[3]}")  # Выход
+        "${MENU_OPTIONS[0]}")  # Выход
             break
             ;;
     esac
 
     # --- Меню после действия ---
     # Если был выбран не "Выход", показывает это меню
-    if [[ "$CHOICE" != "Выход" ]]; then
+    if [[ "$CHOICE" != ${MENU_OPTIONS[0]} ]]; then
         gum confirm "Вернуться в главное меню?" && continue || break
     fi
 done
