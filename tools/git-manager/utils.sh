@@ -27,3 +27,14 @@ refuse() {
         esac
     done
 }
+
+# Проверяет полученное значение на то, является ли оно ссылкой на интерпретатор.
+# Если нет, то возвращает системный интерпретатор python.
+choose_python() {
+    local python_cmd=$1
+    if [[ -n "$python_cmd" && -f "$python_cmd" ]]; then
+        echo "$python_cmd"
+    else
+        command -v python3 || command -v python
+    fi
+}
