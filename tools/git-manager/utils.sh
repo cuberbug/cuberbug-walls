@@ -38,3 +38,23 @@ choose_python() {
         command -v python3 || command -v python
     fi
 }
+
+# --activate: путь до активатора виртуального окружения
+# --python: путь до интерпретатора
+# --requirements: путь до файла с зависимостями
+install_requirements() {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --activate) activate=$2; shift 2 ;;
+            --python) python=$2; shift 2 ;;
+            --requirements) requirements=$2; shift 2 ;;
+            *) echo "Неизвестный аргумент: $1"; return 1 ;;
+        esac
+    done
+
+    echo -e "${DECOR_BLUE} Обновление пакетного менеджера и установка зависимостей..."
+    source "${activate}"
+    ${python} -m pip install --upgrade pip
+    pip install -r ${requirements}
+    deactivate
+}
