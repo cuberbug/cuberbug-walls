@@ -18,6 +18,18 @@
 - <img src="https://www.svgrepo.com/show/452091/python.svg" width="16" height="16"> [Python](https://www.python.org)
 - <img src="https://avatars.githubusercontent.com/u/57376114?s=48&v=4" width="16" height="16"> [gum](https://github.com/charmbracelet/gum) — инструмент для оформления TUI, используется в `menu.sh`
 
+#### Поддерживаемые терминалы
+
+- <img src="https://konsole.kde.org/assets/img/app_icon.png" width="16" height="16"> Konsole
+- <img src="https://gitlab.gnome.org/uploads/-/system/project/avatar/1892/gt.png?width=48" width="16" height="16"> GNOME Terminal
+- <img src="https://gitlab.gnome.org/GNOME/console/-/raw/main/logo.png?ref_type=heads" width="16" height="16"> Console
+- <img src="https://docs.xfce.org/_media/xfce/xfce.terminal.png" width="16" height="16"> xfce4-terminal
+- <img src="https://sw.kovidgoyal.net/kitty/_static/kitty.svg" width="16" height="16"> kitty
+- <img src="https://alacritty.org/alacritty-simple.svg" width="16" height="16"> Alacritty
+- <img src="https://invisible-island.net/img/icons/xterm.ico" width="16" height="16"> XTerm
+
+Наличие эмулятора терминала проверяется в указаной выше последовательности. Скрипты с основной логикой будут выполняться в первом найденном терминале. Для расширения поддерживаемого списка терминалов можно обраиться ко мне в [issues](https://github.com/cuberbug/cuberbug-walls/issues).
+
 ### Git-manager
 
 >В качестве альтернативы возможен ручной запуск скриптов в основной логикой в случае, если вы не хотите устанавливать `gum` для работы интерактивного меню.
@@ -33,18 +45,6 @@
 ./tools/git-manager/push.sh --force
 ```
 Время для автоматических коммитов указывается в формате UTC.
-
-#### Поддерживаемые терминалы
-
-- <img src="https://konsole.kde.org/assets/img/app_icon.png" width="16" height="16"> Konsole
-- <img src="https://gitlab.gnome.org/uploads/-/system/project/avatar/1892/gt.png?width=48" width="16" height="16"> GNOME Terminal
-- <img src="https://gitlab.gnome.org/GNOME/console/-/raw/main/logo.png?ref_type=heads" width="16" height="16"> Console
-- <img src="https://docs.xfce.org/_media/xfce/xfce.terminal.png" width="16" height="16"> xfce4-terminal
-- <img src="https://sw.kovidgoyal.net/kitty/_static/kitty.svg" width="16" height="16"> kitty
-- <img src="https://alacritty.org/alacritty-simple.svg" width="16" height="16"> Alacritty
-- <img src="https://invisible-island.net/img/icons/xterm.ico" width="16" height="16"> XTerm
-
-Наличие эмулятора терминала проверяется в указаной выше последовательности. Скрипты с основной логикой будут выполняться в первом найденном терминале. Для расширения поддерживаемого списка терминалов можно обраиться ко мне в [issues](https://github.com/cuberbug/cuberbug-walls/issues).
 
 ### Renamer
 
