@@ -8,9 +8,9 @@ source "$(dirname "${BASH_SOURCE[0]}")/../git-manager/common.sh" || exit 1
 cd "$REPO_ROOT" || exit 1
 
 PATH_TO_RENAMER_DIR="${REPO_ROOT}/tools/renamer"
-PATH_TO_REQUIREMENTS="${REPO_ROOT}/tools/renamer/requirements.txt"
-PATH_TO_VENV_ACTIVATE="${PATH_TO_RENAMER_DIR}/.venv/bin/activate"
-VENV_DIR="$REPO_ROOT/tools/renamer/.venv"
+PATH_TO_REQUIREMENTS="${PATH_TO_RENAMER_DIR}/requirements.txt"
+VENV_DIR="$PATH_TO_RENAMER_DIR/.venv"
+VENV_PIP="${VENV_DIR}/bin/pip"
 VENV_PYTHON=""
 
 
@@ -18,11 +18,11 @@ VENV_PYTHON=""
 
 if [[ -d "$VENV_DIR" ]]; then
     echo -e "${DECOR_GREEN} Найдено установленное виртуальное окружение Python."
-    VENV_PYTHON="${REPO_ROOT}/tools/renamer/.venv/bin/python"
+    VENV_PYTHON="${VENV_DIR}/bin/python"
 
     if [[ -f "${PATH_TO_REQUIREMENTS}" && -s "${PATH_TO_REQUIREMENTS}" ]]; then
-        install_requirements --activate "${PATH_TO_VENV_ACTIVATE}" \
-                             --python "${VENV_PYTHON}" \
+        install_requirements --python "${VENV_PYTHON}" \
+                             --pip "${VENV_PIP}" \
                              --requirements "${PATH_TO_REQUIREMENTS}"
     else
         echo -e "${DECOR_GREEN} Обновление зависимостей не требуется."
@@ -38,11 +38,11 @@ else
         echo -e "${DECOR_BLUE} Создание виртуального окружения..."
         cd ${PATH_TO_RENAMER_DIR}
         python3 -m venv .venv
-        VENV_PYTHON="${REPO_ROOT}/tools/renamer/.venv/bin/python"
+        VENV_PYTHON="${VENV_DIR}/bin/python"
 
         if [[ -f "${PATH_TO_REQUIREMENTS}" && -s "${PATH_TO_REQUIREMENTS}" ]]; then
-            install_requirements --activate "${PATH_TO_VENV_ACTIVATE}" \
-                                 --python "${VENV_PYTHON}" \
+            install_requirements --python "${VENV_PYTHON}" \
+                                 --pip "${VENV_PIP}" \
                                  --requirements "${PATH_TO_REQUIREMENTS}"
         else
             echo -e "${DECOR_BLUE} Установка зависимостей не требуется."
