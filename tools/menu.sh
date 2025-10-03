@@ -4,7 +4,7 @@ set -o nounset
 set -o pipefail
 
 # Подключает общую логику, переменные и проверки
-source "$(dirname "${BASH_SOURCE[0]}")/git-manager/common.sh" || exit 1
+source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh" || exit 1
 cd "$REPO_ROOT" || exit 1
 
 # Проверяет, что gum установлен

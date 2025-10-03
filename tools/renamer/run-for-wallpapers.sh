@@ -4,7 +4,7 @@ set -o nounset
 set -o pipefail
 
 # Подключает общую логику, переменные и проверки
-source "$(dirname "${BASH_SOURCE[0]}")/../git-manager/common.sh" || exit 1
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh" || exit 1
 cd "$REPO_ROOT" || exit 1
 
 PATH_TO_RENAMER_DIR="${REPO_ROOT}/tools/renamer"
@@ -20,13 +20,9 @@ if [[ -d "$VENV_DIR" ]]; then
     echo -e "${DECOR_GREEN} Найдено установленное виртуальное окружение Python."
     VENV_PYTHON="${VENV_DIR}/bin/python"
 
-    if [[ -f "${PATH_TO_REQUIREMENTS}" && -s "${PATH_TO_REQUIREMENTS}" ]]; then
-        install_requirements --python "${VENV_PYTHON}" \
-                             --pip "${VENV_PIP}" \
-                             --requirements "${PATH_TO_REQUIREMENTS}"
-    else
-        echo -e "${DECOR_GREEN} Обновление зависимостей не требуется."
-    fi
+    install_requirements --python "${VENV_PYTHON}" \
+                         --pip "${VENV_PIP}" \
+                         --requirements "${PATH_TO_REQUIREMENTS}"
 
     echo -e "${DECOR_GREEN} Скрипт будет выполнен в виртуальном окружении."
 else
@@ -40,13 +36,9 @@ else
         python3 -m venv .venv
         VENV_PYTHON="${VENV_DIR}/bin/python"
 
-        if [[ -f "${PATH_TO_REQUIREMENTS}" && -s "${PATH_TO_REQUIREMENTS}" ]]; then
-            install_requirements --python "${VENV_PYTHON}" \
-                                 --pip "${VENV_PIP}" \
-                                 --requirements "${PATH_TO_REQUIREMENTS}"
-        else
-            echo -e "${DECOR_BLUE} Установка зависимостей не требуется."
-        fi
+        install_requirements --python "${VENV_PYTHON}" \
+                             --pip "${VENV_PIP}" \
+                             --requirements "${PATH_TO_REQUIREMENTS}"
 
         echo -e "${DECOR_BLUE} ${FG_GREEN}Виртуальное окружение настроено готово к использованию.${RESET}"
     else
@@ -57,7 +49,7 @@ fi
 
 # --- Запуск основной логики ---
 
-if confirm "Выполнить переименование всех изображений в директории ./wallpapers"; then
+if confirm "Выполнить переименование всех изображений в директории ./wallpapers" -n; then
     cd "${PATH_TO_RENAMER_DIR}" || exit 1
 
     PYTHON_CMD="$(choose_python "${VENV_PYTHON}")"
