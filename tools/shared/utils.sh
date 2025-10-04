@@ -62,7 +62,7 @@ install_requirements() {
     done
 
     if [[ ! -f "$requirements" || ! -s "$requirements" ]]; then
-        echo -e "${DECOR_GREEN} Файл зависимостей не найден или пуст. Установка не требуется."
+        echo -e "${DECOR_GREEN} Установка зависимостей не требуется."
         return 0
     fi
 
