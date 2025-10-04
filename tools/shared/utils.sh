@@ -69,6 +69,5 @@ install_requirements() {
     echo -e "${DECOR_BLUE} Обновление пакетного менеджера и установка зависимостей..."
     ${python} -m pip install --upgrade pip
     ${pip} install -r ${requirements}
-
     echo -e "${DECOR_BLUE} ${FG_GREEN}Виртуальное окружение настроено готово к использованию.${RESET}"
 }
