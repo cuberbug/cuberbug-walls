@@ -4,27 +4,30 @@ set -o nounset
 set -o pipefail
 
 # Подключает общую логику, переменные и проверки
-source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh" || exit 1
+source "$(dirname "${BASH_SOURCE[0]}")/../shared/common.sh" || exit 1
 cd "$REPO_ROOT" || exit 1
 
 PATH_TO_RENAMER_DIR="${REPO_ROOT}/tools/renamer"
 PATH_TO_REQUIREMENTS="${PATH_TO_RENAMER_DIR}/requirements.txt"
 VENV_DIR="$PATH_TO_RENAMER_DIR/.venv"
 VENV_PIP="${VENV_DIR}/bin/pip"
-VENV_PYTHON=""
+
+if [[ -d "$VENV_DIR" ]]; then
+    VENV_PYTHON="${VENV_DIR}/bin/python"
+else
+    VENV_PYTHON=""
+fi
 
 
-# --- Работа с виртуальным окружением ---
+# --- Настройка виртуального окружения ---
 
 if [[ -d "$VENV_DIR" ]]; then
     echo -e "${DECOR_GREEN} Найдено установленное виртуальное окружение Python."
-    VENV_PYTHON="${VENV_DIR}/bin/python"
 
     install_requirements --python "${VENV_PYTHON}" \
                          --pip "${VENV_PIP}" \
                          --requirements "${PATH_TO_REQUIREMENTS}"
 
-    echo -e "${DECOR_GREEN} Скрипт будет выполнен в виртуальном окружении."
 else
     echo -e "${DECOR_YELLOW} ${FG_YELLOW}Виртуальное окружение Python не установлено.${RESET}"
     echo "Вы можете установить его автоматически в директорию инструмента или использовать системный интерпретатор."
@@ -34,13 +37,11 @@ else
         echo -e "${DECOR_BLUE} Создание виртуального окружения..."
         cd ${PATH_TO_RENAMER_DIR}
         python3 -m venv .venv
-        VENV_PYTHON="${VENV_DIR}/bin/python"
 
         install_requirements --python "${VENV_PYTHON}" \
                              --pip "${VENV_PIP}" \
                              --requirements "${PATH_TO_REQUIREMENTS}"
 
-        echo -e "${DECOR_BLUE} ${FG_GREEN}Виртуальное окружение настроено готово к использованию.${RESET}"
     else
         echo -e "${DECOR_YELLOW} ${FG_YELLOW}Скрипт будет выполняться системным интерпретатором.${RESET}"
     fi
@@ -51,8 +52,8 @@ fi
 
 if confirm "Выполнить переименование всех изображений в директории ./wallpapers" -n; then
     cd "${PATH_TO_RENAMER_DIR}" || exit 1
-
     PYTHON_CMD="$(choose_python "${VENV_PYTHON}")"
+
     if ! "$PYTHON_CMD" main.py "${REPO_ROOT}/wallpapers"; then
         echo -e "${DECOR_ERROR} Не удалось выполнить переименование." >&2
         exit 1
