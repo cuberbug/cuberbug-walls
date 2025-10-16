@@ -27,7 +27,7 @@ find_terminal() {
 
 # Определяет корневую директорию репозитория и терминал для запуска основной логики
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-TARGET_SCRIPT="${REPO_ROOT}/tools/menu.sh"
+TARGET_SCRIPT="${REPO_ROOT}/tools/start.sh"
 TERMINAL=$(find_terminal)
 
 if [[ -z "$TERMINAL" ]]; then
