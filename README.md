@@ -49,7 +49,7 @@
 
 ### 🐾 Поддерживаемые терминалы
 
-- <img src="https://konsole.kde.org/assets/img/app_icon.png" width="16" height="16"> Konsole
+- <img src="https://apps.kde.org/app-icons/org.kde.konsole.svg" width="16" height="16"> Konsole
 - <img src="https://gitlab.gnome.org/uploads/-/system/project/avatar/1892/gt.png?width=48" width="16" height="16"> GNOME Terminal
 - <img src="https://gitlab.gnome.org/GNOME/console/-/raw/main/logo.png?ref_type=heads" width="16" height="16"> Console
 - <img src="https://docs.xfce.org/_media/xfce/xfce.terminal.png" width="16" height="16"> xfce4-terminal
