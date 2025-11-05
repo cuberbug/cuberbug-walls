@@ -15,6 +15,14 @@ REPO_TOOLS_PATH="tools"
 
 # Ищет первый доступный терминал из списка и возвращает путь до его бинарника
 find_terminal() {
+  # Ищем терминал в KDE приложениях по умолчанию
+  local kde_terminal="$(cat ~/.config/kdeglobals | grep TerminalApplication | sed 's/.*=//')"
+
+  if [[ -n "$kde_terminal" ]]; then
+    echo "$kde_terminal"
+    return 0
+  fi
+
   local terminals_to_check=(
     "konsole"        # Многофункциональный терминал для среды KDE
     "gnome-terminal" # Стандартный терминал для среды GNOME
