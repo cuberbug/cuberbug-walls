@@ -1,0 +1,263 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+VERSION="1.0.0"
+
+# Список терминалов для проверки.
+# Используется в случае, если не получилось определить терминал по умолчанию.
+DEFAULT_TERMINALS=(
+  "konsole"        # Многофункциональный терминал для среды KDE
+  "gnome-terminal" # Стандартный терминал для среды GNOME
+  "gnome-console"  # Легковесный терминал для GNOME, замена gnome-terminal
+  "xfce4-terminal" # Легковесный терминал, идущий в комплекте с XFCE
+  "kitty"          # Быстрый, настраиваемый терминал с поддержкой GPU
+  "alacritty"      # Легковесный, высокопроизводительный терминал с акцентом на простоту
+  "xterm"          # Классический, минималистичный терминал для X Window System
+)
+
+
+# === Функции ===
+
+# Отображает справку по использованию скрипта
+show_help() {
+  cat <<EOF
+Tool Launcher — универсальный менеджер установки и запуска утилит.
+Версия: $VERSION
+
+Описание:
+  Скрипт обновляет сабмодуль 'tools' и запускает основной сценарий (./tools/start.sh)
+  либо в текущем терминале, либо в новом окне терминала в зависимости от контекста.
+
+
+Использование:
+  $(basename "$0") [опции]
+
+
+Опции:
+  -h, --help       Показать эту справку и выйти
+  -v, --version    Показать версию скрипта
+
+Примеры:
+  ./$(basename "$0")
+      Запускает основной скрипт в текущем терминале или открывает новое окно, если запущен вне терминала.
+
+EOF
+}
+
+# Инициализация окружения
+init_env() {
+  if ! command -v git >/dev/null 2>&1; then
+    echo "Ошибка: не найден git. Установите его, чтобы использовать этот скрипт." >&2
+    exit 1
+  fi
+
+  MAIN_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  cd "$MAIN_PATH" || exit 1
+
+  # Хранит название конфигурации из .gitmodules для использования
+  REPO_TOOLS_NAME="tools"
+  REPO_ROOT="$(git -C "$MAIN_PATH" rev-parse --show-toplevel)"
+  TARGET_SCRIPT="${REPO_ROOT}/tools/start.sh"
+}
+
+# Обновляет сабмодуль до актуального состояния
+#   $1 — название сабмодуля из конфигурации .gitmodules (обязательно)
+update_submodule() {
+  if [[ $# -ne 1 ]]; then
+    echo "Ошибка: update_submodule() требует 1 аргумент — путь до сабмодуля." >&2
+    return 1
+  fi
+  local submodule_name=$1
+
+  echo ":: Проверка и обновление сабмодуля '$submodule_name'..."
+
+  if ! git submodule update --init --remote -- "$submodule_name"; then
+    echo "Ошибка: Не удалось обновить сабмодуль '$submodule_name'." >&2
+    return 1
+  fi
+
+  echo ":: Сабмодуль успешно обновлен или уже актуален."
+}
+
+# Запускает указанный скрипт в новом окне терминала
+#   $1 — путь до исполняемого файла (обязательно)
+run_in_terminal() {
+  if [[ $# -ne 1 ]]; then
+    echo "Ошибка: run_in_terminal() требует 1 аргумент — путь до скрипта." >&2
+    return 1
+  fi
+  local path_to_script=$1
+  local terminal
+
+  if [[ ! -f "$path_to_script" ]]; then
+    echo "Ошибка: Файл '$path_to_script' не существует." >&2
+    return 1
+  fi
+
+  terminal=$(find_terminal)
+  if [[ -z "$terminal" ]]; then
+    echo "Ошибка: Не удалось найти поддерживаемый эмулятор терминала." >&2
+    exit 1
+  fi
+  echo ":: Запуск '$path_to_script' в новом окне ($terminal)..."
+
+  # Применяет правильный ключ в зависимости от терминала
+  case "$terminal" in
+    terminator|xfce4-terminal)
+      "$terminal" -x "$path_to_script"
+      ;;
+    gnome-terminal|kitty)
+      "$terminal" -- "$path_to_script"
+      ;;
+    *) "$terminal" -e "$path_to_script" ;;
+  esac
+}
+
+
+# --- Определение DE ---
+
+# Проверяет, запущена ли текущая сессия KDE Plasma
+is_kde() {
+  # Проверяем по переменным окружения и процессам
+  [[ "${XDG_CURRENT_DESKTOP:-}" == *"KDE"* ]] ||
+  [[ "${DESKTOP_SESSION:-}" == "plasma" ]] ||
+  [[ "${KDE_FULL_SESSION:-}" == "true" ]] ||
+  pgrep -x "plasmashell" >/dev/null 2>&1
+}
+
+# Проверяет, запущена ли текущая сессия GNOME или совместимая с ним
+is_gnome() {
+  local desktop_env="${XDG_CURRENT_DESKTOP:-}"
+
+  # Проверяет основные маркеры GNOME и MATE (который использует схожие технологии)
+  [[ "$desktop_env" == *"GNOME"* ]] ||
+  [[ "$desktop_env" == *"MATE"* ]] ||
+  [[ "${DESKTOP_SESSION:-}" == "gnome" ]] ||
+  pgrep -x "gnome-shell" >/dev/null 2>&1
+}
+
+
+# --- Поиск терминала по умолчанию в DE ---
+
+# Ищет в KDE терминал по умолчанию и возвращает путь до его бинарника
+get_kde_default_terminal() {
+  local kde_terminal
+
+  if command -v kreadconfig6 >/dev/null 2>&1; then
+    kde_terminal="$(kreadconfig6 --file kdeglobals --group General --key TerminalApplication)"
+    if [[ -n "$kde_terminal" ]]; then
+      echo "$kde_terminal"
+      return 0
+    fi
+  fi
+
+  # Если ничего не найдено, возвращаем дефолт KDE
+  kde_terminal="$(command -v konsole)"
+  if [[ -n "$kde_terminal" ]]; then
+    echo "$kde_terminal"
+    return 0
+  fi
+
+  return 1
+}
+
+# Ищет в GNOME/Gnome-совместимых DE терминал по умолчанию
+get_gnome_default_terminal() {
+  local gnome_terminal
+
+  if command -v gsettings >/dev/null 2>&1; then
+    # Ключ, который указывает на команду, используемую для запуска терминала
+    # (например, 'gnome-terminal', 'tilix' и т.д.)
+    gnome_terminal="$(gsettings get org.gnome.desktop.applications terminal exec 2>/dev/null)"
+    
+    # gsettings возвращает строку в одинарных кавычках, их нужно убрать
+    gnome_terminal="${gnome_terminal//\'/}"
+    
+    if [[ -n "$gnome_terminal" ]]; then
+      if command -v "$gnome_terminal" &>/dev/null; then
+        echo "$gnome_terminal"
+        return 0
+      fi
+    fi
+  fi
+  
+  # Если gsettings не сработал или не дал результата, 
+  # возвращаем дефолт GNOME, если он установлен
+  gnome_terminal="$(command -v gnome-terminal)"
+  if [[ -n "$gnome_terminal" ]]; then
+    echo "$gnome_terminal"
+    return 0
+  fi
+  
+  return 1
+}
+
+
+# --- Основная логика поиска ---
+
+# Ищет терминал, в котором можно запустить скрипт в новом окне
+find_terminal() {
+  local terminal
+
+  # Ищем терминал в KDE приложениях по умолчанию
+  if is_kde; then
+    terminal="$(get_kde_default_terminal)"
+
+    if [[ -n "$terminal" ]]; then
+      echo "$terminal"
+      return 0
+    fi
+  fi
+
+  # Ищем терминал в GNOME приложениях по умолчанию
+  if is_gnome; then
+    terminal="$(get_gnome_default_terminal)"
+    if [[ -n "$terminal" ]]; then
+      echo "$terminal"
+      return 0
+    fi
+  fi
+
+  # Если DE пользователя не поддерживается
+  for terminal in "${DEFAULT_TERMINALS[@]}"; do
+    if command -v "$terminal" &>/dev/null; then
+      echo "$terminal"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+
+# === Основная логика ===
+
+
+# --- Обработка вариантов запуска с ключами ---
+
+case "${1:-}" in
+  -h|--help) show_help; exit 0 ;;
+  -v|--version) echo "${VERSION}"; exit 0 ;;
+  -*)
+    echo "Неизвестная опция: $1" >&2
+    echo "Используйте --help для справки." >&2
+    exit 1
+    ;;
+esac
+
+
+# --- Запуск ---
+
+init_env
+update_submodule "$REPO_TOOLS_NAME"
+
+# Если код выполняется в окне терминала, то запустит следующий скрипт в нём
+# Иначе: запустит скрипт в новом окне терминала
+if test -t 0; then
+  echo ":: Запуск интерактивного меню..."
+  $TARGET_SCRIPT
+else
+  run_in_terminal "$TARGET_SCRIPT"
+fi
