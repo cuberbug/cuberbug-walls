@@ -59,7 +59,7 @@ init_env() {
   # Хранит название конфигурации из .gitmodules для использования
   REPO_TOOLS_NAME="tools"
   REPO_ROOT="$(git -C "$MAIN_PATH" rev-parse --show-toplevel)"
-  TARGET_SCRIPT="${REPO_ROOT}/tools/start.sh"
+  TARGET_SCRIPT="${REPO_ROOT}/tools/start"
 }
 
 # Обновляет сабмодуль до актуального состояния
