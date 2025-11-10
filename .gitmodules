@@ -1,4 +1,4 @@
 [submodule "tools"]
 	path = tools
-	url = git@github.com:cuberbug/repo-tools.git
+	url = https://github.com/cuberbug/repo-tools.git
 	branch = main
