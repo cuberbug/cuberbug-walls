@@ -110,10 +110,13 @@ class TableGenerator:
                 current_row.append(" ")
             rows.append("| " + " | ".join(current_row) + " |")
 
-        # строка-разделитель после заголовка
-        header_separator = "| " + " | ".join(["---"] * self.columns) + " |"
+        # 1. Скрытый заголовок
+        hidden_header = "| " + " | ".join([""] * self.columns) + " |"
 
-        return header_separator + "\n" + "\n".join(rows)
+        # 2. Строка-разделитель после заголовка
+        header_separator = "| " + " | ".join([":---:"] * self.columns) + " |"
+
+        return hidden_header + "\n" + header_separator + "\n" + "\n".join(rows)
 
     def _build_generated_block(self, table: str) -> str:
         """
