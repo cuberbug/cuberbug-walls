@@ -1,0 +1,39 @@
+name: Generate tables
+
+on:
+  push:
+    paths:
+      - "wallpapers/**"
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Run tables generator
+        run: python src/tables_generator.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          if ! git diff --quiet; then
+            git add wallpapers
+            git commit -m "auto: generate tables in 'README.md'"
+            git push
+          else
+            echo "No changes to commit"
+          fi
