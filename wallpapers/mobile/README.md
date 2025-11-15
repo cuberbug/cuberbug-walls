@@ -23,7 +23,8 @@
 Не редактируйте этот блок вручную.
 
 
-| --- | --- | --- |
+|  |  |  |
+| :---: | :---: | :---: |
 | [![preview](/wallpapers/mobile/1758582305.jpeg)](/wallpapers/mobile/1758582305.jpeg) | [![preview](/wallpapers/mobile/1762277172.webp)](/wallpapers/mobile/1762277172.webp) | [![preview](/wallpapers/mobile/1762277227.webp)](/wallpapers/mobile/1762277227.webp) |
 | [![preview](/wallpapers/mobile/1762277269.webp)](/wallpapers/mobile/1762277269.webp) | [![preview](/wallpapers/mobile/1762277295.webp)](/wallpapers/mobile/1762277295.webp) | [![preview](/wallpapers/mobile/1762277333.webp)](/wallpapers/mobile/1762277333.webp) |
 | [![preview](/wallpapers/mobile/1762277361.webp)](/wallpapers/mobile/1762277361.webp) | [![preview](/wallpapers/mobile/1762277389.webp)](/wallpapers/mobile/1762277389.webp) | [![preview](/wallpapers/mobile/1762277420.webp)](/wallpapers/mobile/1762277420.webp) |
