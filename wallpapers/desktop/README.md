@@ -20,7 +20,8 @@
 Не редактируйте этот блок вручную.
 
 
-| --- | --- | --- |
+|  |  |  |
+| :---: | :---: | :---: |
 | [![preview](/wallpapers/desktop/1759582634.webp)](/wallpapers/desktop/1759582634.webp) | [![preview](/wallpapers/desktop/1762238856.webp)](/wallpapers/desktop/1762238856.webp) | [![preview](/wallpapers/desktop/1762239254.webp)](/wallpapers/desktop/1762239254.webp) |
 | [![preview](/wallpapers/desktop/1762239362.webp)](/wallpapers/desktop/1762239362.webp) | [![preview](/wallpapers/desktop/1762239599.webp)](/wallpapers/desktop/1762239599.webp) | [![preview](/wallpapers/desktop/1762239728.webp)](/wallpapers/desktop/1762239728.webp) |
 | [![preview](/wallpapers/desktop/1762239835.webp)](/wallpapers/desktop/1762239835.webp) | [![preview](/wallpapers/desktop/1762240560.webp)](/wallpapers/desktop/1762240560.webp) | [![preview](/wallpapers/desktop/1762240840.webp)](/wallpapers/desktop/1762240840.webp) |

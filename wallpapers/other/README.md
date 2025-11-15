@@ -23,7 +23,8 @@
 Не редактируйте этот блок вручную.
 
 
-| --- | --- | --- |
+|  |  |  |
+| :---: | :---: | :---: |
 | [![preview](/wallpapers/other/1758582318.jpg)](/wallpapers/other/1758582318.jpg) | [![preview](/wallpapers/other/1762278090.webp)](/wallpapers/other/1762278090.webp) | [![preview](/wallpapers/other/1762278128.webp)](/wallpapers/other/1762278128.webp) |
 | [![preview](/wallpapers/other/1762278201.webp)](/wallpapers/other/1762278201.webp) | [![preview](/wallpapers/other/1762278288.webp)](/wallpapers/other/1762278288.webp) | [![preview](/wallpapers/other/1762278335.webp)](/wallpapers/other/1762278335.webp) |
 | [![preview](/wallpapers/other/1762278402.webp)](/wallpapers/other/1762278402.webp) | [![preview](/wallpapers/other/1762278437.webp)](/wallpapers/other/1762278437.webp) | [![preview](/wallpapers/other/1762278466.webp)](/wallpapers/other/1762278466.webp) |
