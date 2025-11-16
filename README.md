@@ -28,22 +28,22 @@
     <tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/contrib/README.md">🐾 contrib/README.md</a>
+        <a href="./wallpapers/contrib/README.md">contrib/README.md</a>
       </td>
     <tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/desktop/README.md">🐾 desktop/README.md</a>
+        <a href="./wallpapers/desktop/README.md">desktop/README.md</a>
       </td>
     <tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/mobile/README.md">🐾 mobile/README.md</a>
+        <a href="./wallpapers/mobile/README.md">mobile/README.md</a>
       </td>
     </tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/other/README.md">🐾 other/README.md</a>
+        <a href="./wallpapers/other/README.md">other/README.md</a>
       </td>
     </tr>
   </tbody>
