@@ -4,7 +4,50 @@
 
 Здесь находится моя личная коллекция обоев для рабочего стола и пространство экспериментов в автоматизации и программировании! Здесь вы сможете как насладиться красивыми изображениями, так и попробовать набор инструментов, написанных специально для удобного управления этим репозиторием.
 
-[![Cute cat-girl](/wallpapers/other/1762278931.webp)](/wallpapers/other/1762278931.webp)
+<table>
+  <thead>
+    <tr>
+      <th>🐾 Навигация</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><a href="./wallpapers/">📁 wallpapers</a></td>
+      <td rowspan=10 align="center">
+        <a href="/wallpapers/other/1762278931.webp">
+          <img
+            src="./wallpapers/other/1762278931.webp"
+            alt="Cute cat-girl"
+          >
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><a href="./wallpapers/artists/">📁 artists</a></td>
+    <tr>
+    <tr>
+      <td align="center" style="white-space: nowrap;">
+        <a href="./wallpapers/contrib/README.md">🐾 contrib/README.md</a>
+      </td>
+    <tr>
+    <tr>
+      <td align="center" style="white-space: nowrap;">
+        <a href="./wallpapers/desktop/README.md">🐾 desktop/README.md</a>
+      </td>
+    <tr>
+    <tr>
+      <td align="center" style="white-space: nowrap;">
+        <a href="./wallpapers/mobile/README.md">🐾 mobile/README.md</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" style="white-space: nowrap;">
+        <a href="./wallpapers/other/README.md">🐾 other/README.md</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ### 🐾 А где?
 
@@ -37,6 +80,8 @@
     * [cwebp](https://developers.google.com/speed/webp/docs/cwebp?hl=ru) для работы со сжатием
 * [ImageMagick](https://github.com/nihui/waifu2x-ncnn-vulkan) иногда используется для конвертации
 * [waifu2x-ncnn-vulkan](https://github.com/nihui/waifu2x-ncnn-vulkan) для апскейлинга
+
+Для автоматической генерации таблиц с превью используется скрипт `./src/tables_generator.py` и GitHub Actons: после добавления новых изображений в коллекцию автоматически обновятся таблицы во всех `README.md` файлах.
 
 ---
 
