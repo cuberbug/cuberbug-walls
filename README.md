@@ -13,7 +13,7 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center"><a href="./wallpapers/">📁 wallpapers</a></td>
+      <td align="left">Директории:</td>
       <td rowspan=10 align="center">
         <a href="/wallpapers/other/1762278931.webp">
           <img
@@ -24,18 +24,19 @@
       </td>
     </tr>
     <tr>
+      <td align="center"><a href="./wallpapers/">📁 wallpapers</a></td>
+    </tr>
+    <tr>
       <td align="center"><a href="./wallpapers/artists/">📁 artists</a></td>
+    </tr>
     <tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/contrib/README.md">contrib/README.md</a>
-      </td>
-    <tr>
+      <td align="left">Превью:</td>
+    </tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
         <a href="./wallpapers/desktop/README.md">desktop/README.md</a>
       </td>
-    <tr>
+    </tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
         <a href="./wallpapers/mobile/README.md">mobile/README.md</a>
@@ -44,6 +45,14 @@
     <tr>
       <td align="center" style="white-space: nowrap;">
         <a href="./wallpapers/other/README.md">other/README.md</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Дополнительно:</td>
+    </tr>
+    <tr>
+      <td align="center" style="white-space: nowrap;">
+        <a href="./wallpapers/contrib/README.md">contrib/README.md</a>
       </td>
     </tr>
   </tbody>
