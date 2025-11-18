@@ -3,7 +3,7 @@ name: Generate tables
 on:
   push:
     paths:
-      - "wallpapers/**"
+      - ".previews/**"
   workflow_dispatch:
 
 permissions:
@@ -35,7 +35,7 @@ jobs:
 
           if ! git diff --quiet; then
             git add wallpapers
-            git commit -m "auto: generate tables in 'README.md'"
+            git commit -m "auto: generate preview-tables"
             git push
           else
             echo "No changes to commit"
