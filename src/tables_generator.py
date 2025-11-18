@@ -24,6 +24,7 @@ class TableGenerator:
 
         # 2. Инициализация параметров
         self.wallpapers_dir = Path(self.config["wallpapers_dir"])
+        self.previews_dir = Path(self.config["previews_dir"])
         self.exclude_dirs = set(self.config.get("exclude_dirs", []))
         self.allowed_extensions = [
             ext.lower() for ext in self.config["allowed_extensions"]
@@ -82,12 +83,17 @@ class TableGenerator:
         image_files.sort(key=lambda p: p.name)
         return image_files
 
-    def _generate_table(self, image_files: list[Path], base_path: str) -> str:
+    def _generate_table(
+        self,
+        image_files: list[Path],
+        base_path: str,
+        previews_path: str
+    ) -> str:
         """
         Генерирует Markdown-таблицу с указанным количеством колонок.
 
         Формат ссылки:
-            [![preview](path)](path)
+            [![preview](path_to_preview)](path)
         """
         if not image_files:
             return "_(В этой директории нет изображений)_"
@@ -97,7 +103,8 @@ class TableGenerator:
 
         for image_path in image_files:
             rel_path = f"{base_path}/{image_path.name}"
-            cell = f"[![preview]({rel_path})]({rel_path})"
+            preview = f"{previews_path}/{image_path.name}"
+            cell = f"[![preview]({preview})]({rel_path})"
             current_row.append(cell)
 
             if len(current_row) == self.columns:
@@ -143,6 +150,11 @@ class TableGenerator:
 
         return "\n".join(part for part in parts if part is not None)
 
+    def _get_relative_path(self, directory: Path) -> str:
+        """Формирует относительный путь для принятой директории."""
+        relative_path = directory.relative_to(directory)
+        return f"/{directory.name}/{relative_path}"
+
     def process_directory(self, directory: Path) -> None:
         """
         Обрабатывает одну директорию обоев: ищет README.md, генерирует таблицу
@@ -153,7 +165,6 @@ class TableGenerator:
         if not readme_path.exists():
             return
 
-        # Аргументы (маркеры) больше не передаются
         found, before_text, _, after_text = self._find_readme_with_markers(
             readme_path
         )
@@ -162,11 +173,11 @@ class TableGenerator:
 
         image_files = self._find_image_files(directory)
 
-        # Формирование относительного пути для превью
-        relative_path = directory.relative_to(self.wallpapers_dir)
-        base_path = f"/{self.wallpapers_dir.name}/{relative_path}"
+        # Формирование относительных путей
+        base_path = self._get_relative_path(self.wallpapers_dir)
+        previews_path = self._get_relative_path(self.previews_dir)
 
-        table = self._generate_table(image_files, base_path)
+        table = self._generate_table(image_files, base_path, previews_path)
         new_generated_block = self._build_generated_block(table)
 
         new_content = before_text + new_generated_block + after_text
