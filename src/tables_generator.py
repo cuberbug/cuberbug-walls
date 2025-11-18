@@ -150,18 +150,12 @@ class TableGenerator:
 
         return "\n".join(part for part in parts if part is not None)
 
-    def _get_relative_path(self, directory: Path) -> str:
-        """Формирует относительный путь для принятой директории."""
-        relative_path = directory.relative_to(directory)
-        return f"/{directory.name}/{relative_path}"
-
     def process_directory(self, directory: Path) -> None:
         """
         Обрабатывает одну директорию обоев: ищет README.md, генерирует таблицу
         и заменяет блок между маркерами.
         """
         readme_path = directory / self.README_NAME
-
         if not readme_path.exists():
             return
 
@@ -173,15 +167,21 @@ class TableGenerator:
 
         image_files = self._find_image_files(directory)
 
-        # Формирование относительных путей
-        base_path = self._get_relative_path(self.wallpapers_dir)
-        previews_path = self._get_relative_path(self.previews_dir)
+        # Относительный путь ОТ КОРНЯ wallpapers до текущей подпапки
+        relative_path = directory.relative_to(self.wallpapers_dir)
 
-        table = self._generate_table(image_files, base_path, previews_path)
+        # Формируем правильные базовые пути
+        original_base = f"/{self.wallpapers_dir.name}/{relative_path}"
+        preview_base = f"/{self.previews_dir.name}/{relative_path}"
+
+        table = self._generate_table(
+            image_files=image_files,
+            base_path=original_base,
+            previews_path=preview_base
+        )
+
         new_generated_block = self._build_generated_block(table)
-
         new_content = before_text + new_generated_block + after_text
-
         readme_path.write_text(new_content, encoding="utf-8")
 
     def run(self) -> None:
