@@ -1,7 +1,8 @@
-# Каталог, внутри которого ищем поддиректории с изображениями
+# Директории
 wallpapers_dir: "wallpapers"
+previews_dir: ".previews"
 
-# Список директорий внутри wallpapers/, которые нужно пропустить
+# Список директорий внутри 'wallpapers_dir', которые нужно пропустить
 exclude_dirs:
   - "artists"
   - "bucket"
