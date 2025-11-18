@@ -123,6 +123,13 @@
 * <img src="https://www.svgrepo.com/show/303548/git-icon-logo.svg" width="18" height="18"> [Git](https://git-scm.com)
 * <img src="https://www.svgrepo.com/show/452091/python.svg" width="18" height="18"> [Python](https://www.python.org) ≥ 3.10
 
+### 🐾 Debian
+
+Для работы с виртуальным окружением требуется установить пакет `python3-venv`:
+```shell
+sudo apt install python3-venv
+```
+
 ### 🐾 Поддерживаемые DE
 
 * <img src="https://kde.org/stuff/clipart/logo/kde-logo-white-gray-128x128.png" width="18" height="18"> KDE Plasma
