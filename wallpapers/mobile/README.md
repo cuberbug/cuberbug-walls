@@ -24,12 +24,12 @@
 
 |  |  |  |
 | :---: | :---: | :---: |
-| [![preview](/wallpapers/mobile/1758582305.jpeg)](/wallpapers/mobile/1758582305.jpeg) | [![preview](/wallpapers/mobile/1762277172.webp)](/wallpapers/mobile/1762277172.webp) | [![preview](/wallpapers/mobile/1762277227.webp)](/wallpapers/mobile/1762277227.webp) |
-| [![preview](/wallpapers/mobile/1762277269.webp)](/wallpapers/mobile/1762277269.webp) | [![preview](/wallpapers/mobile/1762277295.webp)](/wallpapers/mobile/1762277295.webp) | [![preview](/wallpapers/mobile/1762277333.webp)](/wallpapers/mobile/1762277333.webp) |
-| [![preview](/wallpapers/mobile/1762277361.webp)](/wallpapers/mobile/1762277361.webp) | [![preview](/wallpapers/mobile/1762277389.webp)](/wallpapers/mobile/1762277389.webp) | [![preview](/wallpapers/mobile/1762277420.webp)](/wallpapers/mobile/1762277420.webp) |
-| [![preview](/wallpapers/mobile/1762277902.webp)](/wallpapers/mobile/1762277902.webp) | [![preview](/wallpapers/mobile/1762277937.webp)](/wallpapers/mobile/1762277937.webp) | [![preview](/wallpapers/mobile/1762277967.webp)](/wallpapers/mobile/1762277967.webp) |
-| [![preview](/wallpapers/mobile/1762277992.webp)](/wallpapers/mobile/1762277992.webp) | [![preview](/wallpapers/mobile/1762278020.webp)](/wallpapers/mobile/1762278020.webp) | [![preview](/wallpapers/mobile/1762382679.webp)](/wallpapers/mobile/1762382679.webp) |
-| [![preview](/wallpapers/mobile/1763339476.webp)](/wallpapers/mobile/1763339476.webp) | [![preview](/wallpapers/mobile/1763391617.webp)](/wallpapers/mobile/1763391617.webp) | [![preview](/wallpapers/mobile/1763392333.webp)](/wallpapers/mobile/1763392333.webp) |
+| [![preview](/.previews/./1758582305.jpeg)](/wallpapers/./1758582305.jpeg) | [![preview](/.previews/./1762277172.webp)](/wallpapers/./1762277172.webp) | [![preview](/.previews/./1762277227.webp)](/wallpapers/./1762277227.webp) |
+| [![preview](/.previews/./1762277269.webp)](/wallpapers/./1762277269.webp) | [![preview](/.previews/./1762277295.webp)](/wallpapers/./1762277295.webp) | [![preview](/.previews/./1762277333.webp)](/wallpapers/./1762277333.webp) |
+| [![preview](/.previews/./1762277361.webp)](/wallpapers/./1762277361.webp) | [![preview](/.previews/./1762277389.webp)](/wallpapers/./1762277389.webp) | [![preview](/.previews/./1762277420.webp)](/wallpapers/./1762277420.webp) |
+| [![preview](/.previews/./1762277902.webp)](/wallpapers/./1762277902.webp) | [![preview](/.previews/./1762277937.webp)](/wallpapers/./1762277937.webp) | [![preview](/.previews/./1762277967.webp)](/wallpapers/./1762277967.webp) |
+| [![preview](/.previews/./1762277992.webp)](/wallpapers/./1762277992.webp) | [![preview](/.previews/./1762278020.webp)](/wallpapers/./1762278020.webp) | [![preview](/.previews/./1762382679.webp)](/wallpapers/./1762382679.webp) |
+| [![preview](/.previews/./1763339476.webp)](/wallpapers/./1763339476.webp) | [![preview](/.previews/./1763391617.webp)](/wallpapers/./1763391617.webp) | [![preview](/.previews/./1763392333.webp)](/wallpapers/./1763392333.webp) |
 
 Здесь находится хвостик автоматической генерации. Спасибо за просмотр! 👾
 <!-- END GENERATED -->
