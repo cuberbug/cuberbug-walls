@@ -4,7 +4,7 @@
 
 | Превью | Художники |
 | :--- | :--- |
-| ➤ **desktop** | [Grymzik](/wallpapers/artists/Grymzik/README.md) |
+| ➤ **desktop** | [Grym3ik](/wallpapers/artists/Grym3ik/README.md) |
 | [mobile](/wallpapers/mobile/README.md) |  |
 | [other](/wallpapers/other/README.md) |  |
 

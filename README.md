@@ -52,7 +52,7 @@
     </tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/artists/Grymzik/README.md">Grymzik</a>
+        <a href="./wallpapers/artists/Grym3ik/README.md">Grym3ik</a>
       </td>
     </tr>
       <td align="center">
