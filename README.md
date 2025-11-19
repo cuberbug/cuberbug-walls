@@ -55,6 +55,9 @@
         <a href="./wallpapers/artists/Grymzik/README.md">Grymzik</a>
       </td>
     </tr>
+    <tr>
+      <td align="center">________________</td>
+    </tr>
   </tbody>
 </table>
 
