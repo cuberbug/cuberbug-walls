@@ -129,7 +129,7 @@
 * <img src="https://www.svgrepo.com/show/303548/git-icon-logo.svg" width="18" height="18"> [Git](https://git-scm.com)
 * <img src="https://www.svgrepo.com/show/452091/python.svg" width="18" height="18"> [Python](https://www.python.org) ≥ 3.10
 
-### 🐾 Debian
+### 🐾 Debian / Ubuntu
 
 Для работы с виртуальным окружением требуется установить пакет `python3-venv`:
 ```shell
