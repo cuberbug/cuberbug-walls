@@ -15,7 +15,7 @@
     <tr>
       <td align="left">Директории:</td>
       <td rowspan=10 align="center">
-        <a href="/wallpapers/other/1762278931.webp">
+        <a href="./wallpapers/other/1762278931.webp">
           <img
             src="./wallpapers/other/1762278931.webp"
             alt="Cute cat-girl"
@@ -55,9 +55,12 @@
         <a href="./wallpapers/artists/Grymzik/README.md">Grymzik</a>
       </td>
     </tr>
-    <tr>
-      <td align="center">____________________</td>
-    </tr>
+      <td align="center">
+        <img
+          src="./.previews/1763526658.webp"
+          alt="Cute microcat-girl"
+        >
+      </td>
   </tbody>
 </table>
 
