@@ -7,7 +7,7 @@
 <table>
   <thead>
     <tr>
-      <th>🐾 Навигация</th>
+      <th style="white-space: nowrap;"><b>🐾 Навигация</b></th>
       <th></th>
     </tr>
   </thead>
@@ -24,35 +24,35 @@
       </td>
     </tr>
     <tr>
-      <td align="center"><a href="./wallpapers/">📁 wallpapers</a></td>
+      <td align="center" style="white-space: nowrap;"><a href="./wallpapers/">📁 wallpapers</a></td>
     </tr>
     <tr>
-      <td align="center"><a href="./wallpapers/artists/">📁 artists</a></td>
+      <td align="center" style="white-space: nowrap;"><a href="./wallpapers/artists/">📁 artists</a></td>
     </tr>
     <tr>
       <td align="left">Превью:</td>
     </tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/desktop/README.md">desktop/README.md</a>
+        <a href="./wallpapers/desktop/README.md">🖥️ desktop</a>
       </td>
     </tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/mobile/README.md">mobile/README.md</a>
+        <a href="./wallpapers/mobile/README.md">📱 mobile</a>
       </td>
     </tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/other/README.md">other/README.md</a>
+        <a href="./wallpapers/other/README.md">☁️ other</a>
       </td>
     </tr>
     <tr>
-      <td align="left">Дополнительно:</td>
+      <td align="left">Художники:</td>
     </tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/contrib/README.md">contrib/README.md</a>
+        <a href="./wallpapers/artists/Grymzik/README.md">Grymzik</a>
       </td>
     </tr>
   </tbody>
@@ -90,7 +90,7 @@
 * [ImageMagick](https://github.com/nihui/waifu2x-ncnn-vulkan) иногда используется для конвертации
 * [waifu2x-ncnn-vulkan](https://github.com/nihui/waifu2x-ncnn-vulkan) для апскейлинга
 
-Для автоматической генерации таблиц с превью используется скрипт `./src/tables_generator.py` и GitHub Actons: после добавления новых изображений в коллекцию автоматически обновятся таблицы во всех `README.md` файлах.
+Для автоматической генерации таблиц с превью используется скрипт `./src/tables_generator.py` и GitHub Actons. Он активируется после обновления директории с превью, которая управляется мною при помощи локальных скриптов.
 
 ---
 
@@ -164,7 +164,7 @@ sudo apt install python3-venv
 
 ---
 
-<h1 align="center">🌾🌾🌾₍^. ̫ .^₎⟆🌾🌾🌾</h1>
+<h1 align="center">🌾 🌾 🌾 ₍^. ̫ .^₎⟆ 🌾 🌾 🌾</h1>
 
 ## 🐾 Именные директории _(beta)_
 

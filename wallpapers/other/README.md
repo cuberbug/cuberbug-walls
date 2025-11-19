@@ -1,22 +1,19 @@
 <h1 align="center">☁️ ₍^. ̫ .^₎⟆ ☁️</h1>
 
-## 🐾 Навигация
+[🏠 На главную](/)
 
-[wallpapers](/wallpapers/)
-* [bucket](/wallpapers/bucket/)
-* [contrib/README.md](/wallpapers/contrib/README.md)
-* [desktop/README.md](/wallpapers/desktop/README.md)
-* [mobile/README.md](/wallpapers/mobile/README.md)
-* ➤ [**other/README.md**](/wallpapers/other/README.md)
-
-[На главную](/)
+| Превью | Художники |
+| :--- | :--- |
+| [desktop](/wallpapers/desktop/README.md) | [Grymzik](/wallpapers/artists/Grymzik/README.md) |
+| [mobile](/wallpapers/mobile/README.md) |  |
+| ➤ **other** |  |
 
 
-### 🐾 Other
+## 🐾 Other
 
 Здесь лежит что-то странное! Я не знаю что с этим делать, но и удалять не хочу.
 
-## 🐾 Галерея _(авто)_
+### 🐾 Галерея _(auto)_
 
 <!-- GENERATED: DO NOT EDIT -->
 Эта таблица создана автоматически, все изображения в ней кликабельны и ведут на соответствующие файлы в репозитории.
