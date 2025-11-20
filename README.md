@@ -13,7 +13,7 @@
   </thead>
   <tbody>
     <tr>
-      <td align="left">Директории:</td>
+      <td align="center" style="white-space: nowrap;">Директории</td>
       <td rowspan=10 align="center">
         <a href="./wallpapers/other/1762278931.webp">
           <img
@@ -30,7 +30,7 @@
       <td align="center" style="white-space: nowrap;"><a href="./wallpapers/artists/">📁 artists</a></td>
     </tr>
     <tr>
-      <td align="left">Превью:</td>
+      <td align="center" style="white-space: nowrap;">Превью</td>
     </tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
@@ -48,7 +48,7 @@
       </td>
     </tr>
     <tr>
-      <td align="left">Художники:</td>
+      <td align="center" style="white-space: nowrap;">Художники</td>
     </tr>
     <tr>
       <td align="center" style="white-space: nowrap;">
