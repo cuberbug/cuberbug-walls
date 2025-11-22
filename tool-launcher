@@ -3,7 +3,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-VERSION="1.0.0"
+VERSION="1.1.0"
 
 # Список терминалов для проверки.
 # Используется в случае, если не получилось определить терминал по умолчанию.
@@ -138,6 +138,13 @@ is_gnome() {
   pgrep -x "gnome-shell" >/dev/null 2>&1
 }
 
+# Проверяет, запущена ли текущая сессия XFCE
+is_xfce() {
+  [[ "${XDG_CURRENT_DESKTOP:-}" == *"XFCE"* ]] ||
+  [[ "${DESKTOP_SESSION:-}" == "xfce" ]] ||
+  pgrep -fx "xfce4-session" >/dev/null 2>&1
+}
+
 
 # --- Поиск терминала по умолчанию в DE ---
 
@@ -194,6 +201,42 @@ get_gnome_default_terminal() {
   return 1
 }
 
+# Ищет терминал по умолчанию в XFCE
+get_xfce_default_terminal() {
+  local xfce_terminal
+
+  # XFCE хранит настройки в xfconf, мы ищем настройку для 'TerminalEmulator'
+  if command -v xfconf-query >/dev/null 2>&1; then
+    # Канал: xfce4-session, Свойство: /command (иногда /startup/xfce4-terminal/command)
+    # Используем '/general/TerminalEmulator'
+    xfce_terminal="$(xfconf-query \
+      --channel xfce4-session \
+      --property /general/TerminalEmulator 2>/dev/null \
+      | awk '{print $1}')"
+
+    # xfconf-query может вернуть команду и её аргументы (например, 'xfce4-terminal --tab')
+    # Нам нужно только имя исполняемого файла, которое обычно первое
+    xfce_terminal="$(echo "$xfce_terminal" | awk '{print $1}')"
+
+    if [[ -n "$xfce_terminal" ]]; then
+      # Проверяем, существует ли бинарник
+      if command -v "$xfce_terminal" &>/dev/null; then
+        echo "$xfce_terminal"
+        return 0
+      fi
+    fi
+  fi
+
+  # Если ничего не найдено, возвращаем дефолт XFCE
+  xfce_terminal="$(command -v xfce4-terminal)"
+  if [[ -n "$xfce_terminal" ]]; then
+    echo "$xfce_terminal"
+    return 0
+  fi
+
+  return 1
+}
+
 
 # --- Основная логика поиска ---
 
@@ -214,6 +257,14 @@ find_terminal() {
   # Ищем терминал в GNOME приложениях по умолчанию
   if is_gnome; then
     terminal="$(get_gnome_default_terminal)"
+    if [[ -n "$terminal" ]]; then
+      echo "$terminal"
+      return 0
+    fi
+  fi
+
+  if is_xfce; then
+    terminal="$(get_xfce_default_terminal)"
     if [[ -n "$terminal" ]]; then
       echo "$terminal"
       return 0
