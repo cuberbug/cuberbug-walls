@@ -140,6 +140,7 @@ sudo apt install python3-venv
 
 * <img src="https://kde.org/stuff/clipart/logo/kde-logo-white-gray-128x128.png" width="18" height="18"> KDE Plasma
 * <img src="https://gitlab.gnome.org/GNOME/gnome-boxes-logos/-/raw/master/logos/gnome-logo.svg" width="18" height="18"> GNOME
+* 🐁 XFCE
 
 ### 🐾 Поддерживаемые терминалы
 
