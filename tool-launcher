@@ -3,7 +3,10 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-VERSION="1.1.0"
+VERSION="1.1.1"
+
+# Переменные для отладки
+unset DEBUG
 
 # Список терминалов для проверки.
 # Используется в случае, если не получилось определить терминал по умолчанию.
@@ -36,8 +39,12 @@ Tool Launcher — универсальный менеджер установки
 
 
 Опции:
-  -h, --help       Показать эту справку и выйти
-  -v, --version    Показать версию скрипта
+  -h, --help      Показать эту справку и выйти
+  -v, --version   Показать версию скрипта
+  -d, --debug     Запуск скрипта в режиме отладки:
+                    - определение DE
+                    - определение терминала по умолчанию
+                    - запуск основного скрипта в новом окне найденного терминала
 
 Примеры:
   ./$(basename "$0")
@@ -58,8 +65,11 @@ init_env() {
 
   # Хранит название конфигурации из .gitmodules для использования
   REPO_TOOLS_NAME="tools"
+
   REPO_ROOT="$(git -C "$MAIN_PATH" rev-parse --show-toplevel)"
   TARGET_SCRIPT="${REPO_ROOT}/tools/start"
+
+  DE=""
 }
 
 # Обновляет сабмодуль до актуального состояния
@@ -150,90 +160,120 @@ is_xfce() {
 
 # Ищет в KDE терминал по умолчанию и возвращает путь до его бинарника
 get_kde_default_terminal() {
-  local kde_terminal
+  local term_bin
 
   if command -v kreadconfig6 >/dev/null 2>&1; then
-    kde_terminal="$(kreadconfig6 --file kdeglobals --group General --key TerminalApplication)"
-    if [[ -n "$kde_terminal" ]]; then
-      echo "$kde_terminal"
+
+  if [[ -v DEBUG ]]; then
+    echo ">>> Найдена утилита 'kreadconfig6'" >&2
+  fi
+
+    term_bin="$(kreadconfig6 --file kdeglobals --group General --key TerminalApplication)"
+    if [[ -n "$term_bin" ]]; then
+
+      if [[ -v DEBUG ]]; then
+        echo -e ">>> Найден терминал: ${term_bin}" >&2
+      fi
+
+      echo "$term_bin"
       return 0
     fi
   fi
 
   # Если ничего не найдено, возвращаем дефолт KDE
-  kde_terminal="$(command -v konsole)"
-  if [[ -n "$kde_terminal" ]]; then
-    echo "$kde_terminal"
+  if term_bin=$(command -v konsole) && [[ -n "$term_bin" ]]; then
+    echo "$term_bin"
     return 0
   fi
 
+  # Если совсем ничего не нашли (крайний случай)
+  echo -e "Ошибка: не удалось определить терминал для {$DE}" >&2
   return 1
 }
 
 # Ищет в GNOME/Gnome-совместимых DE терминал по умолчанию
 get_gnome_default_terminal() {
-  local gnome_terminal
+  local term_bin
 
   if command -v gsettings >/dev/null 2>&1; then
     # Ключ, который указывает на команду, используемую для запуска терминала
     # (например, 'gnome-terminal', 'tilix' и т.д.)
-    gnome_terminal="$(gsettings get org.gnome.desktop.applications terminal exec 2>/dev/null)"
-    
+    term_bin="$(gsettings get org.gnome.desktop.applications terminal exec 2>/dev/null)"
+
     # gsettings возвращает строку в одинарных кавычках, их нужно убрать
-    gnome_terminal="${gnome_terminal//\'/}"
-    
-    if [[ -n "$gnome_terminal" ]]; then
-      if command -v "$gnome_terminal" &>/dev/null; then
-        echo "$gnome_terminal"
+    term_bin="${term_bin//\'/}"
+
+    if [[ -n "$term_bin" ]]; then
+      if command -v "$term_bin" &>/dev/null; then
+        echo "$term_bin"
         return 0
       fi
     fi
   fi
-  
+
   # Если gsettings не сработал или не дал результата, 
   # возвращаем дефолт GNOME, если он установлен
-  gnome_terminal="$(command -v gnome-terminal)"
-  if [[ -n "$gnome_terminal" ]]; then
-    echo "$gnome_terminal"
+  if term_bin=$(command -v gnome-terminal) && [[ -n "$term_bin" ]]; then
+    echo "$term_bin"
     return 0
   fi
-  
+
+  # Если совсем ничего не нашли (крайний случай)
+  echo -e "Ошибка: не удалось определить терминал для {$DE}" >&2
   return 1
 }
 
 # Ищет терминал по умолчанию в XFCE
 get_xfce_default_terminal() {
-  local xfce_terminal
+  local config_file="$HOME/.config/xfce4/helpers.rc"
+  local term_bin
 
-  # XFCE хранит настройки в xfconf, мы ищем настройку для 'TerminalEmulator'
-  if command -v xfconf-query >/dev/null 2>&1; then
-    # Канал: xfce4-session, Свойство: /command (иногда /startup/xfce4-terminal/command)
-    # Используем '/general/TerminalEmulator'
-    xfce_terminal="$(xfconf-query \
-      --channel xfce4-session \
-      --property /general/TerminalEmulator 2>/dev/null \
-      | awk '{print $1}')"
+  # XFCE хранит настройки приложений по умолчанию (через exo) в helpers.rc
+  if [[ -f "$config_file" ]]; then
+    # Ищем строку вида TerminalEmulator=название
+    term_bin=$(grep "^TerminalEmulator=" "$config_file" | cut -d'=' -f2)
 
-    # xfconf-query может вернуть команду и её аргументы (например, 'xfce4-terminal --tab')
-    # Нам нужно только имя исполняемого файла, которое обычно первое
-    xfce_terminal="$(echo "$xfce_terminal" | awk '{print $1}')"
+    if [[ -v DEBUG ]]; then
+      echo -e ">>> Произведён поиск в директории: ${config_file}" >&2
+      echo -e ">>> Значение 'TerminalEmulator': ${term_bin}" >&2
+    fi
+  fi
 
-    if [[ -n "$xfce_terminal" ]]; then
-      # Проверяем, существует ли бинарник
-      if command -v "$xfce_terminal" &>/dev/null; then
-        echo "$xfce_terminal"
+  # ПРОВЕРКА 1: Если нашли настройку и она является валидной командой
+  if [[ -n "$term_bin" ]] && command -v "$term_bin" >/dev/null 2>&1; then
+    echo "$term_bin"
+    return 0
+  fi
+
+  # ПРОВЕРКА 2: Обработка "Custom" (пользовательских) терминалов
+  # Если в конфиге написано "custom-TerminalEmulator", нужно искать в локальных хелперах
+  if [[ "$term_bin" == "custom-TerminalEmulator" ]]; then
+    local custom_helper="$HOME/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop"
+    if [[ -f "$custom_helper" ]]; then
+      # Извлекаем команду из .desktop файла (строка Bin=...)
+      term_bin=$(grep "^Bin=" "$custom_helper" | cut -d'=' -f2 | awk '{print $1}')
+
+      if [[ -v DEBUG ]]; then
+        echo -e ">>> Произведён поиск в директории: ${custom_helper}" >&2
+        echo -e ">>> Значение 'custom-TerminalEmulator': ${term_bin}" >&2
+      fi
+
+      if command -v "$term_bin" >/dev/null 2>&1; then
+        echo "$term_bin"
         return 0
       fi
     fi
   fi
 
-  # Если ничего не найдено, возвращаем дефолт XFCE
-  xfce_terminal="$(command -v xfce4-terminal)"
-  if [[ -n "$xfce_terminal" ]]; then
-    echo "$xfce_terminal"
+  # ПРОВЕРКА 3 (Fallback): Если настройка не найдена или команда невалидна,
+  # проверяем наличие стандартного xfce4-terminal
+  if term_bin=$(command -v xfce4-terminal) && [[ -n "$term_bin" ]]; then
+    echo "$term_bin"
     return 0
   fi
 
+  # Если совсем ничего не нашли (крайний случай)
+  echo -e "Ошибка: не удалось определить терминал для {$DE}" >&2
   return 1
 }
 
@@ -246,6 +286,12 @@ find_terminal() {
 
   # Ищем терминал в KDE приложениях по умолчанию
   if is_kde; then
+    DE="KDE"
+
+    if [[ -v DEBUG ]]; then
+      echo -e ">>> Используемое DE: {$DE}" >&2
+    fi
+
     terminal="$(get_kde_default_terminal)"
 
     if [[ -n "$terminal" ]]; then
@@ -256,6 +302,12 @@ find_terminal() {
 
   # Ищем терминал в GNOME приложениях по умолчанию
   if is_gnome; then
+    DE="GNOME"
+
+    if [[ -v DEBUG ]]; then
+      echo -e ">>> Используемое DE: {$DE}" >&2
+    fi
+
     terminal="$(get_gnome_default_terminal)"
     if [[ -n "$terminal" ]]; then
       echo "$terminal"
@@ -263,7 +315,14 @@ find_terminal() {
     fi
   fi
 
+  # Ищем терминал в GNOME приложениях по умолчанию
   if is_xfce; then
+    DE="XFCE"
+
+    if [[ -v DEBUG ]]; then
+      echo -e ">>> Используемое DE: {$DE}" >&2
+    fi
+
     terminal="$(get_xfce_default_terminal)"
     if [[ -n "$terminal" ]]; then
       echo "$terminal"
@@ -291,6 +350,7 @@ find_terminal() {
 case "${1:-}" in
   -h|--help) show_help; exit 0 ;;
   -v|--version) echo "${VERSION}"; exit 0 ;;
+  -d|--debug) DEBUG=1 ;;
   -*)
     echo "Неизвестная опция: $1" >&2
     echo "Используйте --help для справки." >&2
@@ -303,6 +363,13 @@ esac
 
 init_env
 update_submodule "$REPO_TOOLS_NAME"
+
+
+if [[ -v DEBUG ]]; then
+  echo ">>> Запуск скрипта в режиме отладки..."
+  run_in_terminal "$TARGET_SCRIPT"
+  exit 0
+fi
 
 # Если код выполняется в окне терминала, то запустит следующий скрипт в нём
 # Иначе: запустит скрипт в новом окне терминала
