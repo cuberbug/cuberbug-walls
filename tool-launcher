@@ -3,7 +3,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-VERSION="1.2.0"
+VERSION="1.2.1"
 
 # Режим отладки (включается при запуске с ключом '--debug' или '-d')
 unset DEBUG
@@ -17,7 +17,7 @@ BOLD="\e[1m"
 F_RESET="\e[0m"
 F_ERROR="[ ${RED}ERROR${F_RESET} ]"
 F_BLUE="${BOLD}${BLUE}::${F_RESET}"
-F_GREEN="${BOLD}${GREEN}::${F_RESET}"
+F_GREEN="${BOLD}${GREEN} ✔${F_RESET}"
 
 # Список терминалов для проверки.
 # Используется в случае, если не получилось определить терминал по умолчанию.
@@ -72,7 +72,7 @@ EOF
 # === Вывод отладочной информации ===
 # -----------------------------------
 # Работает только в случае, если скрипт запущен в режиме отладки,
-# то есть с флагами -d или --debug
+# то есть с флагами -d или --debug.
 #
 # Использование: log_debug "Сообщение"
 # -----------------------------------
@@ -188,7 +188,7 @@ get_kde_default_terminal() {
     return 0
   fi
 
-  echo -e "${F_ERROR} не удалось определить терминал для {$DE}" >&2
+  echo -e "${F_ERROR} Не удалось определить терминал для {$DE}" >&2
   return 1
 }
 
@@ -199,6 +199,7 @@ get_gnome_default_terminal() {
     log_debug "Запрос 'gsettings get ...'"
     term_bin="$(gsettings get org.gnome.desktop.applications terminal exec 2>/dev/null)"
     term_bin="${term_bin//\'/}"  # Удаление кавычек
+    term_bin="${term_bin%% *}"   # Берёт только первый токен (на случай аргументов)
 
     if [[ -n "$term_bin" ]]; then
       if command -v "$term_bin" &>/dev/null; then
@@ -218,7 +219,7 @@ get_gnome_default_terminal() {
     return 0
   fi
 
-  echo -e "Ошибка: не удалось определить терминал для {$DE}" >&2
+  echo -e "${F_ERROR} Не удалось определить терминал для {$DE}" >&2
   return 1
 }
 
@@ -244,7 +245,7 @@ get_xfce_default_terminal() {
   elif [[ "$term_bin" == "custom-TerminalEmulator" ]]; then
     local custom_helper="$HOME/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop"
 
-    log_debug "Обнаружен custom-TerminalEmulator, проверяем: $custom_helper"
+    log_debug "Обнаружен custom-TerminalEmulator, запуск проверки: $custom_helper"
 
     if [[ -f "$custom_helper" ]]; then
       local custom_cmd
@@ -268,7 +269,7 @@ get_xfce_default_terminal() {
   fi
 
   # Если совсем ничего не нашли (крайний случай)
-  echo -e "Ошибка: не удалось определить терминал для {$DE}" >&2
+  echo -e "${F_ERROR} Не удалось определить терминал для {$DE}" >&2
   return 1
 }
 
@@ -317,7 +318,7 @@ find_terminal() {
 
 # === Запуск скрипта в новом окне терминала ===
 # ---------------------------------------------
-# Запускает указанный скрипт в новом окне терминала
+# Запускает указанный скрипт в новом окне терминала.
 #   $1 — путь до исполняемого файла (обязательно)
 # ---------------------------------------------
 run_in_terminal() {
@@ -344,14 +345,46 @@ run_in_terminal() {
 
   # Применяет правильный ключ в зависимости от терминала
   case "$terminal" in
+    # --- Группа GNOME (требуют '--') ---
+    # gnome-terminal: флаг -x удален, флаг -e deprecated. Используем --
+    # gnome-console (kgx): принимает только --
+    # tilix: аналогично gnome-terminal
+    gnome-terminal|gnome-console|tilix)
+      args=("--" "$path_to_script")
+      ;;
+
+    # --- Mate Terminal ---
+    # Часто ведет себя как старый гном.
+    # Флаг -e надежнее всего работает на старых и новых версиях Mate.
+    # Вариант с -- может просто открыть shell, игнорируя команду в старых версиях.
+    mate-terminal)
+      args=("-e" "$path_to_script")
+      ;;
+
+    # --- Группа XFCE / Terminator ---
+    # xfce4-terminal: поддерживает -x (execute remainder), это избавляет от проблем с кавычками.
+    # terminator: аналогично, -x работает стабильнее, чем -e.
     terminator|xfce4-terminal)
       args=("-x" "$path_to_script")
       ;;
-    gnome-terminal|gnome-console|kitty)
-      args=("--" "$path_to_script")
+
+    # --- Kitty ---
+    # Kitty не требует флага -e, она принимает скрипт как аргумент.
+    kitty)
+      args=("$path_to_script")
       ;;
+
+    # --- Стандартные терминалы (флаг -e) ---
+    # Konsole: флаг -e является стандартом.
+    # Alacritty: флаг -e обязателен (в старых версиях), в новых (v0.13+) тоже работает.
+    # xterm/urxvt/rxvt/st: классика, только -e.
+    konsole|alacritty|xterm|urxvt|rxvt|st)
+      args=("-e" "$path_to_script")
+      ;;
+
+    # Fallback
     *)
-      # Стандартный вариант запуска
+      log_debug "${YELLOW}Неизвестный терминал '$terminal', используется стандартный флаг -e${F_RESET}"
       args=("-e" "$path_to_script")
       ;;
   esac
@@ -396,15 +429,17 @@ update_submodule() {
 # -----------------------
 
 # --- Обработка вариантов запуска с ключами ---
-case "${1:-}" in
-  -h|--help) show_help; exit 0 ;;
-  -v|--version) echo "v${VERSION}"; exit 0 ;;
-  -d|--debug) DEBUG=1 ;;
-  -*)
-    echo "Неизвестная опция: $1. Используйте --help для справки." >&2
-    exit 1
-    ;;
-esac
+while [[ $# -gt 0 ]]; do
+  case "${1:-}" in
+    -h|--help) show_help; exit 0 ;;
+    -v|--version) echo "v${VERSION}"; exit 0 ;;
+    -d|--debug) DEBUG=1; shift ;;
+    -*)
+      echo "Неизвестная опция: $1. Используйте --help для справки." >&2
+      exit 1
+      ;;
+  esac
+done
 
 
 # === Запуск ===
@@ -421,10 +456,11 @@ if [[ -v DEBUG ]]; then
 fi
 
 # Если код выполняется в окне терминала, то запустит следующий скрипт в нём
-# Иначе: запустит скрипт в новом окне терминала
 if test -t 0; then
   echo -e "${F_GREEN} Запуск интерактивного меню..."
   $TARGET_SCRIPT
-else
-  run_in_terminal "$TARGET_SCRIPT"
+  exit 0
 fi
+
+# Иначе: запустит скрипт в новом окне терминала
+run_in_terminal "$TARGET_SCRIPT"
