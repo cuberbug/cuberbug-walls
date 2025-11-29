@@ -45,7 +45,7 @@ show_hello() {
   cat <<EOF
 :::::::::::::::::::::::
 :::: Tool Launcher ::::
-:::::::::::::::: v${VERSION}
+:::::::::::::::: v$VERSION
 
 EOF
 }
@@ -535,7 +535,7 @@ update_submodule "$REPO_TOOLS_NAME"
 
 
 if [[ -v DEBUG ]]; then
-  log_debug "$(f_blue "Запуск в режиме отладки") (открытие нового окна принудительно)"
+  log_debug "$(f_bold "Запуск в режиме отладки") (открытие нового окна принудительно)"
   run_in_terminal "$TARGET_SCRIPT"
   exit 0
 fi
