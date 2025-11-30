@@ -66,25 +66,32 @@
 
 ### 🐾 А где?
 
-А вот! Все картинки отсортированы по типам и формату:
-* `./wallpapers/desktop`: широкоформатные изображения для десктопов.
-* `./wallpapers/mobile`: изображения в вертикальном формате для мобильных устройств.
-* `./wallpapers/artists`: именные директории художников, в каждой **планируется** размещение дополнительной информации:  _(beta)_
+А вот! Все картинки находятся внутри `./wallpapers/` и отсортированы по типам и формату:
+* `desktop`: широкоформатные изображения для десктопов.
+* `mobile`: изображения в вертикальном формате для мобильных устройств.
+* `artists`: именные директории художников, в каждой размещена дополнительная информация:
     * описание;
     * ссылки на соцсети художника;
-    * ссылки и/или симлинки на их работы внутри основных директорий.
+    * галерея работ.
 * `./wallpapers/other`: без категории.
 
 ```shell
 /cuberbug-walls/
 └── wallpapers   # Коллекция обоев в высоком разрешении
-    ├── artists    # Именные директории для художников (beta)
-    │   └── Grym3ik  # Именная директория (beta)
+    ├── artists    # Именные директории для художников
+    │   └── Grym3ik  # Именная директория
     ├── bucket     # Корзина: файлы в ней будут удалены через некоторое время
     ├── contrib    # Для предложений ваших изображений в коллекцию
     ├── desktop    # Горизонтальный формат
     ├── mobile     # Вертикальный формат
     └── other      # Изображения без категории
+```
+
+### 🐾 Клонирование
+
+Со временем в репозитории может накапливаться мусор, поэтому рекомендую использовать дополнительный параметр `--depth`
+```shell
+git clone --depth 1 https://github.com/cuberbug/cuberbug-walls.git
 ```
 
 #### 🐾 Технические детали
@@ -117,12 +124,19 @@
 
 `tool-launcher` поддерживает ключи для работы с ним:
 
-* `./tool-launcher -h` — покажет справочную информацию.
-* `./tool-launcher -v` — покажет версию скрипта.
+* `--help` или `-h` — покажет справочную информацию
+* `--version` или `-v` — покажет версию скрипта
+* `--debug` или `-d` — режим отладки с принудительным запуском целевого скрипта в новом окне терминала
+* `--no-color` или `-N` — активация режима бесцветного вывода текста в терминал
+
+Пример запуска в режиме отладки с бесцветным выводом:
+```shell
+./tool-launcher --debug --no-color
+```
 
 #### 🐾 Тихий режим
 
-Если вы запустили `tool-launcher` двойным кликом, он автоматически определит ваш **Desktop Environment** (KDE Plasma/GNOME) или переберёт список поддерживаемых терминалов, чтобы открыть TUI-меню в новом окне.
+Если вы запустили `tool-launcher` двойным кликом, он автоматически определит ваш **Desktop Environment** или переберёт список поддерживаемых терминалов, чтобы открыть TUI-меню в новом окне.
 
 ## 🐾 Зависимости
 
@@ -141,18 +155,6 @@ sudo apt install python3-venv
 * <img src="https://kde.org/stuff/clipart/logo/kde-logo-white-gray-128x128.png" width="18" height="18"> KDE Plasma
 * <img src="https://gitlab.gnome.org/GNOME/gnome-boxes-logos/-/raw/master/logos/gnome-logo.svg" width="18" height="18"> GNOME
 * 🐁 XFCE
-
-### 🐾 Поддерживаемые терминалы
-
-* <img src="https://apps.kde.org/app-icons/org.kde.konsole.svg" width="18" height="18"> Konsole
-* <img src="https://gitlab.gnome.org/uploads/-/system/project/avatar/1892/gt.png?width=48" width="18" height="18"> GNOME Terminal
-* <img src="https://gitlab.gnome.org/GNOME/console/-/raw/main/logo.png?ref_type=heads" width="18" height="18"> Console
-* <img src="https://docs.xfce.org/_media/xfce/xfce.terminal.png" width="18" height="18"> xfce4-terminal
-* <img src="https://sw.kovidgoyal.net/kitty/_static/kitty.svg" width="18" height="18"> kitty
-* <img src="https://alacritty.org/alacritty-simple.svg" width="18" height="18"> Alacritty
-* <img src="https://invisible-island.net/img/icons/xterm.ico" width="18" height="18"> XTerm
-
-Наличие эмулятора терминала проверяется в указаной выше последовательности. Скрипт `./tools/start.sh` будет выполняться в первом найденном терминале. Для расширения поддерживаемого списка терминалов можно обраиться ко мне в [issues](https://github.com/cuberbug/cuberbug-walls/issues).
 
 ## ⚙️ **Repo-Tools**
 
@@ -173,7 +175,7 @@ sudo apt install python3-venv
 
 <h1 align="center">🌾 🌾 🌾 ₍^. ̫ .^₎⟆ 🌾 🌾 🌾</h1>
 
-## 🐾 Именные директории _(beta)_
+## 🐾 Именные директории
 
 В моей коллекции со временем будут появляться директории, связанные с конкретными людьми, будь то источники или художники и их работы. В таком случае к каждой именной директории будет добавлен свой `README.md` с описанием и ссылками, если это возможно. Если вам захочется связаться с автором, выразить ему благодарность или что-то предложить — не стесняйтесь этим воспользоваться!
 
@@ -182,4 +184,3 @@ sudo apt install python3-venv
 Выражаю благодарность:
 * [Жоре](https://github.com/Katze-942) за помощь с идеями! ❤️
 * [КОМЕТЕ](https://github.com/KN13KOMETA) за вклад и новый вектор для развития! ☄️
-
