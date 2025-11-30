@@ -3,11 +3,12 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-VERSION="1.2.3"
+VERSION="1.2.4"
 USE_COLOR=1
 
 # Режим отладки (включается при запуске с ключом '--debug' или '-d')
 unset DEBUG
+unset NO_WINDOW
 
 
 # === Вспомогательные функции ===
@@ -18,7 +19,7 @@ Tool Launcher — универсальный менеджер установки
 Версия: $VERSION
 
 Описание:
-  Скрипт обновляет сабмодуль 'tools' и запускает основной сценарий (./tools/start.sh)
+  Скрипт обновляет сабмодуль 'tools' и запускает основной сценарий (./tools/start)
   либо в текущем терминале, либо в новом окне терминала в зависимости от контекста.
 
 
@@ -27,11 +28,12 @@ Tool Launcher — универсальный менеджер установки
 
 
 Опции:
-  -h, --help       Показать эту справку
-  -v, --version    Показать версию скрипта
-  -d, --debug      Запуск в режиме отладки
-  -N, --no-color   Отключает цветной вывод в терминал
-                   Также поддерживается переменная окружения 'NO_COLOR'
+  -h, --help        Показать эту справку
+  -v, --version     Показать версию скрипта
+  -d, --debug       Запуск в режиме отладки
+  -W, --no-window   Отменяет принудительный запуск нового окна терминала в режиме отладки
+  -N, --no-color    Отключает цветной вывод в терминал
+                    Также поддерживается переменная окружения 'NO_COLOR'
 
 Примеры:
   ./$(basename "$0")
@@ -67,6 +69,23 @@ _init_terminal_list() {
     "alacritty"      # Легковесный, высокопроизводительный терминал с акцентом на простоту
     "xterm"          # Классический, минималистичный терминал для X Window System
   )
+}
+
+
+# =============================
+# Управляет поведением режима отладки
+# -----------------------------
+# Устанавливает поведение по умолчанию:
+#   в режиме отладки принудительно выполнить запуск целевого скрипта в новом окне.
+#
+# Если запущен с ключами -W или --no-window, то принудительный запуск нового окна отменяется.
+# =============================
+_init_debug_env() {
+  DEBUG_FORCE_WINDOW=1
+
+  if [[ -v NO_WINDOW ]]; then
+    DEBUG_FORCE_WINDOW=0
+  fi
 }
 
 
@@ -129,7 +148,7 @@ _format() {
   echo -en "${start_code}$*${end_code}"
 }
 
-f_bold()   { _format "$BOLD"   "$NO_BOLD"  "$@"; }
+f_bold()   { _format "$BOLD"   "$NO_BOLD"      "$@"; }
 f_red()    { _format "$RED"    "$CANCEL_COLOR" "$@"; }
 f_green()  { _format "$GREEN"  "$CANCEL_COLOR" "$@"; }
 f_yellow() { _format "$YELLOW" "$CANCEL_COLOR" "$@"; }
@@ -155,6 +174,7 @@ log_debug() {
 init_env() {
   _init_format
   _init_terminal_list
+  _init_debug_env
 
   log_debug "Запуск инициализации окружения..."
 
@@ -443,24 +463,18 @@ run_in_terminal() {
     gnome-terminal|gnome-console|tilix)
       args=("--" "$path_to_script")
       ;;
-
     mate-terminal)
       args=("-e" "$path_to_script")
       ;;
-
     terminator|xfce4-terminal)
       args=("-x" "$path_to_script")
       ;;
-
-    # Kitty: команда передаётся напрямую
     kitty)
       args=("$path_to_script")
       ;;
-
     konsole|alacritty|xterm|urxvt|rxvt|st)
       args=("-e" "$path_to_script")
       ;;
-
     *)
       log_debug "$(f_yellow "Неизвестный терминал $(f_bold "$terminal")," \
                 "используется стандартный флаг -e")"
@@ -513,6 +527,7 @@ update_submodule() {
 while [[ $# -gt 0 ]]; do
   case "${1:-}" in
     -N|--no-color) USE_COLOR=0; USE_COLOR_SET_BY_CLI=1; shift ;;
+    -W|--no-window) NO_WINDOW=1; shift ;;
     -d|--debug) DEBUG=1; shift ;;
     -h|--help) show_help; exit 0 ;;
     -v|--version) echo "v$VERSION"; exit 0 ;;
@@ -534,7 +549,7 @@ log_debug "Запуск обновления сабмодуля..."
 update_submodule "$REPO_TOOLS_NAME"
 
 
-if [[ -v DEBUG ]]; then
+if [[ -v DEBUG && $DEBUG_FORCE_WINDOW -eq 1 ]]; then
   log_debug "$(f_bold "Запуск в режиме отладки") (открытие нового окна принудительно)"
   run_in_terminal "$TARGET_SCRIPT"
   exit 0
@@ -542,7 +557,7 @@ fi
 
 # Если код выполняется в окне терминала, то запустит следующий скрипт в нём
 if test -t 0; then
-  echo -e "${F_GREEN}Запуск интерактивного меню..."
+  echo -e "${F_BLUE}Запуск интерактивного меню..."
   $TARGET_SCRIPT
   exit 0
 fi
