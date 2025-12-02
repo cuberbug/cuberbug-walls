@@ -3,12 +3,13 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-VERSION="1.2.4"
+VERSION="1.2.5"
 USE_COLOR=1
 
 # Режим отладки (включается при запуске с ключом '--debug' или '-d')
 unset DEBUG
 unset NO_WINDOW
+unset USE_COLOR_SET_BY_CLI
 
 
 # === Вспомогательные функции ===
@@ -28,7 +29,7 @@ Tool Launcher — универсальный менеджер установки
 
 
 Опции:
-  -h, --help        Показать эту справку
+  -h, --help, help  Показать эту справку
   -v, --version     Показать версию скрипта
   -d, --debug       Запуск в режиме отладки
   -W, --no-window   Отменяет принудительный запуск нового окна терминала в режиме отладки
@@ -161,9 +162,9 @@ f_blue()   { _format "$BLUE"   "$CANCEL_COLOR" "$@"; }
 # Работает только в случае, если скрипт запущен в режиме отладки,
 # то есть с флагами -d или --debug.
 #
-# Использование: log_debug "Сообщение"
+# Использование: e_debug "Сообщение"
 # =============================
-log_debug() {
+e_debug() {
   if [[ -v DEBUG ]]; then
     echo -e "[ $(f_yellow "DEBUG") ] $*" >&2
   fi
@@ -176,7 +177,7 @@ init_env() {
   _init_terminal_list
   _init_debug_env
 
-  log_debug "Запуск инициализации окружения..."
+  e_debug "Запуск инициализации окружения..."
 
   if ! command -v git >/dev/null 2>&1; then
     echo -e "${F_ERROR}Не найден git. Установите его, чтобы использовать этот скрипт." >&2
@@ -193,9 +194,9 @@ init_env() {
   DE=""
 
 
-  log_debug "Переменные окружения подготовлены."
-  log_debug "Рабочая директория: $(f_bold "$MAIN_PATH")"
-  log_debug "Целевой скрипт: $(f_bold "$TARGET_SCRIPT")"
+  e_debug "Переменные окружения подготовлены."
+  e_debug "Рабочая директория: $(f_bold "$MAIN_PATH")"
+  e_debug "Целевой скрипт: $(f_bold "$TARGET_SCRIPT")"
 }
 
 
@@ -214,7 +215,7 @@ is_kde() {
     [[ "${KDE_FULL_SESSION:-}" == "true" ]] ||
     pgrep -x "plasmashell" >/dev/null 2>&1; then
     DE="KDE Plasma"
-    log_debug "Обнаружено окружение: $(f_bold "$DE")"
+    e_debug "Обнаружено окружение: $(f_bold "$DE")"
     return 0
   fi
   return 1
@@ -228,7 +229,7 @@ is_gnome() {
     [[ "${DESKTOP_SESSION:-}" == "gnome" ]] ||
     pgrep -x "gnome-shell" >/dev/null 2>&1; then
     DE="GNOME"
-    log_debug "Обнаружено окружение: $(f_bold "$DE")"
+    e_debug "Обнаружено окружение: $(f_bold "$DE")"
     return 0
   fi
   return 1
@@ -239,7 +240,7 @@ is_xfce() {
     [[ "${DESKTOP_SESSION:-}" == "xfce" ]] ||
     pgrep -fx "xfce4-session" >/dev/null 2>&1; then
     DE="XFCE"
-    log_debug "Обнаружено окружение: $(f_bold "$DE")"
+    e_debug "Обнаружено окружение: $(f_bold "$DE")"
     return 0
   fi
   return 1
@@ -265,23 +266,23 @@ get_kde_default_terminal() {
   fi
 
   if [[ -n "$kconfig_cmd" ]]; then
-    log_debug "Чтение конфига $(f_bold "$DE") через $(f_bold "$kconfig_cmd")..."
+    e_debug "Чтение конфига $(f_bold "$DE") через $(f_bold "$kconfig_cmd")..."
     term_bin="$($kconfig_cmd --file kdeglobals --group General --key TerminalApplication)"
 
     if [[ -n "$term_bin" ]]; then
-      log_debug "Конфигурация вернула: $(f_green "$term_bin")"
+      e_debug "Конфигурация вернула: $(f_green "$term_bin")"
       echo "$term_bin"
       return 0
     else
-      log_debug "Ключ $(f_bold "TerminalApplication") пуст или не найден."
+      e_debug "Ключ $(f_bold "TerminalApplication") пуст или не найден."
     fi
   else
-    log_debug "Утилиты $(f_bold "kreadconfig") не найдены."
+    e_debug "Утилиты $(f_bold "kreadconfig") не найдены."
   fi
 
   # Попытка вернуть дефолт для KDE
   if term_bin=$(command -v konsole) && [[ -n "$term_bin" ]]; then
-    log_debug "Возврат дефолтного терминала для $(f_bold "$DE")"
+    e_debug "Возврат дефолтного терминала для $(f_bold "$DE")"
     echo "$term_bin"
     return 0
   fi
@@ -294,25 +295,25 @@ get_gnome_default_terminal() {
   local term_bin
 
   if command -v gsettings >/dev/null 2>&1; then
-    log_debug "Запрос $(f_bold "'gsettings get ...'")"
+    e_debug "Запрос $(f_bold "'gsettings get ...'")"
     term_bin="$(gsettings get org.gnome.desktop.applications terminal exec 2>/dev/null)"
     term_bin="${term_bin//\'/}"  # Удаление кавычек
     term_bin="${term_bin%% *}"   # Берёт только первый токен (на случай аргументов)
 
     if [[ -n "$term_bin" ]]; then
       if command -v "$term_bin" &>/dev/null; then
-        log_debug "gsettings вернул: $(f_green "$term_bin")"
+        e_debug "gsettings вернул: $(f_green "$term_bin")"
         echo "$term_bin"
         return 0
       fi
     fi
   else
-    log_debug "Утилита $(f_bold "gsettings") не найдена."
+    e_debug "Утилита $(f_bold "gsettings") не найдена."
   fi
 
   # Попытка вернуть дефолт для GNOME
   if term_bin=$(command -v gnome-terminal) && [[ -n "$term_bin" ]]; then
-    log_debug "Возврат дефолтного терминала для $(f_bold "$DE")"
+    e_debug "Возврат дефолтного терминала для $(f_bold "$DE")"
     echo "$term_bin"
     return 0
   fi
@@ -327,33 +328,33 @@ get_xfce_default_terminal() {
 
   # XFCE хранит настройки приложений по умолчанию (через exo) в helpers.rc
   if [[ -f "$config_file" ]]; then
-    log_debug "Чтение файла: $(f_bold "$config_file")"
+    e_debug "Чтение файла: $(f_bold "$config_file")"
     term_bin=$(grep "^TerminalEmulator=" "$config_file" | cut -d'=' -f2)
-    log_debug "Найдено значение $(f_bold "TerminalEmulator"): $(f_green "$term_bin")"
+    e_debug "Найдено значение $(f_bold "TerminalEmulator"): $(f_green "$term_bin")"
   else
-    log_debug "Файл конфигурации $(f_bold "$config_file") не найден."
+    e_debug "Файл конфигурации $(f_bold "$config_file") не найден."
   fi
 
   # Проверка значения из 'helpers.rc'
   if [[ -n "$term_bin" ]] && command -v "$term_bin" >/dev/null 2>&1; then
-    log_debug "$(f_bold "helpers.rc") вернул: $(f_green "$term_bin")"
+    e_debug "$(f_bold "helpers.rc") вернул: $(f_green "$term_bin")"
     echo "$term_bin"
     return 0
   # Или 'custom-TerminalEmulator.desktop'
   elif [[ "$term_bin" == "custom-TerminalEmulator" ]]; then
     local custom_helper="$HOME/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop"
 
-    log_debug "Обнаружен $(f_bold "custom-TerminalEmulator")," \
+    e_debug "Обнаружен $(f_bold "custom-TerminalEmulator")," \
               "запуск проверки: $(f_bold "$custom_helper")"
 
     if [[ -f "$custom_helper" ]]; then
       local custom_cmd
 
       custom_cmd=$(grep "^Bin=" "$custom_helper" | cut -d'=' -f2 | awk '{print $1}')
-      log_debug "Извлечена команда из desktop-файла: $(f_bold "$custom_cmd")"
+      e_debug "Извлечена команда из desktop-файла: $(f_bold "$custom_cmd")"
 
       if [[ -n "$custom_cmd" ]] && command -v "$custom_cmd" >/dev/null 2>&1; then
-        log_debug "$(f_bold "custom-TerminalEmulator.desktop") вернул: $(f_green "$custom_cmd")"
+        e_debug "$(f_bold "custom-TerminalEmulator.desktop") вернул: $(f_green "$custom_cmd")"
         echo "$custom_cmd"
         return 0
       fi
@@ -362,7 +363,7 @@ get_xfce_default_terminal() {
 
   # Попытка вернуть дефолт для XFCE
   if term_bin=$(command -v xfce4-terminal) && [[ -n "$term_bin" ]]; then
-    log_debug "Возврат дефолтного терминала для $(f_bold "$DE")"
+    e_debug "Возврат дефолтного терминала для $(f_bold "$DE")"
     echo "$term_bin"
     return 0
   fi
@@ -397,23 +398,70 @@ find_terminal() {
   fi
 
   if [[ -n "$terminal" ]]; then
-    log_debug "Для $(f_bold "$DE") используется терминал: $(f_bold "$terminal")"
+    e_debug "Для $(f_bold "$DE") используется терминал: $(f_bold "$terminal")"
     echo "$terminal"
     return 0
   fi
 
-  log_debug "Не удалось определить DE или терминал для него. Перебор списка по умолчанию..."
+  e_debug "Не удалось определить DE или терминал для него. Перебор списка по умолчанию..."
 
   # Если DE пользователя не поддерживается
   for terminal in "${DEFAULT_TERMINALS[@]}"; do
     if command -v "$terminal" &>/dev/null; then
-      log_debug "Найден терминал из списка: $(f_bold "$terminal")"
+      e_debug "Найден терминал из списка: $(f_bold "$terminal")"
       echo "$terminal"
       return 0
     fi
   done
 
   return 1
+}
+
+
+# =============================
+# Адаптер флагов терминала
+# -----------------------------
+# Определяет корректный ключ запуска для переданного имени терминала.
+# Используется для унификации запуска скриптов в разных эмуляторах.
+#
+# Параметры:
+#   $1 — имя терминала (например, "konsole", "gnome-terminal")
+#
+# Возвращает (echo):
+#   Строку с флагом ("-e", "-x", "--") или пустую строку,
+#   если флаг не требуется (например, для kitty).
+#   Если терминал неизвестен, возвращает стандартный флаг "-e".
+# =============================
+get_term_flag() {
+  if [[ $# -ne 1 ]]; then
+    echo -e "${F_ERROR}$(f_bold 'get_term_flag') требует 1 аргумент — путь до скрипта." >&2
+    return 1
+  fi
+
+  local term_name="$1"
+
+  case "$term_name" in
+    gnome-terminal|gnome-console|tilix)
+      echo "--"
+      ;;
+    terminator|xfce4-terminal)
+      echo "-x"
+      ;;
+    kitty)
+      echo ""
+      ;;
+    mate-terminal)
+      echo "-e"
+      ;;
+    konsole|alacritty|xterm|urxvt|rxvt|st)
+      echo "-e"
+      ;;
+    *)
+      e_debug "$(f_yellow "Неизвестный терминал $(f_bold "$terminal")," \
+                "используется стандартный флаг -e")"
+      echo "-e"
+      ;;
+  esac
 }
 
 
@@ -435,12 +483,14 @@ find_terminal() {
 # =============================
 run_in_terminal() {
   if [[ $# -ne 1 ]]; then
-    echo -e "${F_ERROR}$(f_bold 'run_in_terminal()') требует 1 аргумент — путь до скрипта." >&2
+    echo -e "${F_ERROR}$(f_bold 'run_in_terminal') требует 1 аргумент — путь до скрипта." >&2
     return 1
   fi
+
   local path_to_script=$1
   local terminal
   local term_name
+  local flag
   local args=()
 
   if [[ ! -f "$path_to_script" ]]; then
@@ -454,35 +504,19 @@ run_in_terminal() {
     exit 1
   fi
 
+  # Извлечение чистого имени (например, /usr/bin/konsole -> konsole)
   term_name="${terminal##*/}"
+  flag=$(get_term_flag "$term_name")
+
+  # Формирование массива аргументов
+  if [[ -n "$flag" ]]; then
+    args=("$flag" "$path_to_script")
+  else
+    args=("$path_to_script")
+  fi
 
   echo -e "${F_GREEN}Запуск $(f_bold "$path_to_script") в новом окне ($(f_bold "$term_name"))..."
-
-  # Подбор аргументов запуска в зависимости от терминала
-  case "$term_name" in
-    gnome-terminal|gnome-console|tilix)
-      args=("--" "$path_to_script")
-      ;;
-    mate-terminal)
-      args=("-e" "$path_to_script")
-      ;;
-    terminator|xfce4-terminal)
-      args=("-x" "$path_to_script")
-      ;;
-    kitty)
-      args=("$path_to_script")
-      ;;
-    konsole|alacritty|xterm|urxvt|rxvt|st)
-      args=("-e" "$path_to_script")
-      ;;
-    *)
-      log_debug "$(f_yellow "Неизвестный терминал $(f_bold "$terminal")," \
-                "используется стандартный флаг -e")"
-      args=("-e" "$path_to_script")
-      ;;
-  esac
-
-  log_debug "Выполняется команда: $(f_bold "$terminal ${args[*]}")"
+  e_debug "Выполняется команда: $(f_bold "$terminal ${args[*]}")"
 
   "$terminal" "${args[@]}"
 }
@@ -499,6 +533,7 @@ update_submodule() {
     echo "${F_ERROR}update_submodule() требует 1 аргумент — путь до сабмодуля." >&2
     return 1
   fi
+
   local submodule_name=$1
 
   echo -e "${F_BLUE}Проверка и обновление сабмодуля $(f_bold "$submodule_name")..."
@@ -513,54 +548,75 @@ update_submodule() {
 
 
 # =============================
-# Основная логика
+# Разбор аргументов командной строки
 # -----------------------------
-# - обрабатывает полученные при запуске ключи
-# - выводит информацию о скрипте
-# - устанавливает окружение (переменные)
-# - обновляет сабмодуль
-# - запускает целевой скрипт из сабмодуля или ищет терминал для запуска в окне
+# Читает переданные скрипту ключи и переопределяет глобальные переменные конфигурации.
+#
+# Параметры:
+#   $@ — все аргументы скрипта
+# =============================
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case "${1:-}" in
+      -N|--no-color) USE_COLOR=0; USE_COLOR_SET_BY_CLI=1; shift ;;
+      -W|--no-window) NO_WINDOW=1; shift ;;
+      -d|--debug) DEBUG=1; shift ;;
+      -h|--help|help) show_help; exit 0 ;;
+      -v|--version) echo "v$VERSION"; exit 0 ;;
+      -*)
+        echo "Неизвестная опция: $1. Используйте --help для справки." >&2
+        exit 1
+        ;;
+      *)
+        echo "Ошибка: Скрипт не принимает позиционные аргументы ('$1')." >&2
+        exit 1
+        ;;
+    esac
+  done
+}
+
+
+# =============================
+# Основная логика
+# =============================
+# Обрабатывает полученные при запуске аргументы:
+#   - устанавливает переменные окружения в зависимости от опций
+#   - при запросе на вывод подсказки или версии завершает работу после вывода
+# -----------------------------
+# Выводит приветственное сообщение с названием и версией
+# -----------------------------
+# Устанавливает переменные окружения и настраивает основную логику работы:
+#   - форматирование вывода в зависимости от выбранного режима работы
+#   - поведение режима отладки, если он активирован
+# -----------------------------
+# Обновляет сабмодуль
+# -----------------------------
+# Запускает целевой скрипт из сабмодуля
+#
+# Если скрипт не был запущен интерактивно или был активирован режим отладки:
+#   - произведёт поиск терминала по умолчанию:
+#     - если DE поддерживается, то возьмёт терминал из его настроек
+#     - иначе — возьмёт первый попавшийся из подготовленного списка
+#   - (debug) при получении запрета на запуск в новом окне пропустит этап поиска
+#     и запустит целевой скрипт в интерактивном режиме в текущем терминале
 # =============================
 
-
-# === Обработка вариантов запуска с ключами ===
-while [[ $# -gt 0 ]]; do
-  case "${1:-}" in
-    -N|--no-color) USE_COLOR=0; USE_COLOR_SET_BY_CLI=1; shift ;;
-    -W|--no-window) NO_WINDOW=1; shift ;;
-    -d|--debug) DEBUG=1; shift ;;
-    -h|--help) show_help; exit 0 ;;
-    -v|--version) echo "v$VERSION"; exit 0 ;;
-    -*)
-      echo "Неизвестная опция: $1. Используйте --help для справки." >&2
-      exit 1
-      ;;
-  esac
-done
-
-
-# === Запуск ===
+parse_args "$@"
 
 show_hello
-
 init_env
-
-log_debug "Запуск обновления сабмодуля..."
 update_submodule "$REPO_TOOLS_NAME"
 
-
 if [[ -v DEBUG && $DEBUG_FORCE_WINDOW -eq 1 ]]; then
-  log_debug "$(f_bold "Запуск в режиме отладки") (открытие нового окна принудительно)"
+  e_debug "$(f_bold "Запуск в режиме отладки") (открытие нового окна принудительно)"
   run_in_terminal "$TARGET_SCRIPT"
   exit 0
 fi
 
-# Если код выполняется в окне терминала, то запустит следующий скрипт в нём
 if test -t 0; then
   echo -e "${F_BLUE}Запуск интерактивного меню..."
   $TARGET_SCRIPT
   exit 0
 fi
 
-# Иначе: запустит скрипт в новом окне терминала
 run_in_terminal "$TARGET_SCRIPT"
