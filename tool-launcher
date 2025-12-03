@@ -3,7 +3,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-VERSION="1.2.6"
+VERSION="1.2.7"
 USE_COLOR=1
 
 # Режим отладки (включается при запуске с ключом '--debug' или '-d')
@@ -81,8 +81,8 @@ EOF
 
 show_hello() {
   cat <<EOF
-:::::::::::::::::::::::
-:::: Tool Launcher ::::
+  :::::::::::::::::::
+ ::: Tool Launcher :::
 :::::::::::::::: v$VERSION
 
 EOF
@@ -103,7 +103,7 @@ init_env() {
   e_debug "Запуск инициализации окружения..."
 
   if ! command -v git >/dev/null 2>&1; then
-    echo -e "${F_ERROR}Не найден git. Установите его, чтобы использовать этот скрипт." >&2
+    e_error "Не найден git. Установите его, чтобы использовать этот скрипт."
     exit 1
   fi
 
@@ -154,10 +154,6 @@ _init_format() {
     BLUE=""
     CANCEL_COLOR=""
   fi
-
-  F_ERROR="[ ${RED}ERROR${CANCEL_COLOR} ] "
-  F_BLUE="${BOLD}${BLUE} ● ${CANCEL_COLOR}${NO_BOLD}"
-  F_GREEN="${BOLD}${GREEN} ✔ ${CANCEL_COLOR}${NO_BOLD}"
 }
 
 
@@ -171,8 +167,14 @@ _init_format() {
 #   - f_yellow: жёлтый
 #   - f_blue:   синий
 #
+# Функции для вывода стилизованных информационных сообщений:
+#   - e_info:   о происходящих событиях
+#   - e_done:   об успешном выполнении действия
+#   - e_error:  об ошибке
+#   - e_debug:  информация для отладки
+#
 # Пример использования:
-#   echo -e "Вывод $(f_red "красного") и $(f_green "зелёного") текста"
+#   e_info "Вывод $(f_red "красного") и $(f_green "зелёного") текста"
 # =============================
 
 f_bold()   { _format "$BOLD"   "$NO_BOLD"      "$@"; }
@@ -181,27 +183,49 @@ f_green()  { _format "$GREEN"  "$CANCEL_COLOR" "$@"; }
 f_yellow() { _format "$YELLOW" "$CANCEL_COLOR" "$@"; }
 f_blue()   { _format "$BLUE"   "$CANCEL_COLOR" "$@"; }
 
+e_info() {
+  local message=("$@")
+  local icon="●"
+
+  icon=$(f_bold "$icon")
+  icon=$(f_blue "$icon")
+  printf " %s %s\n" "${icon}" "${message[*]}" >&2
+}
+
+e_done() {
+  local message=("$@")
+  local icon="✔"
+
+  icon=$(f_bold "$icon")
+  icon=$(f_green "$icon")
+  printf " %s %s\n" "${icon}" "${message[*]}" >&2
+}
+
+e_error() {
+  local message=("$@")
+  local icon="ERROR"
+
+  icon=$(f_bold "$icon")
+  icon=$(f_red "$icon")
+  printf "[ %s ] %s\n" "$icon" "${message[*]}" >&2
+}
+
+e_debug() {
+  local message=("$@")
+  local icon="DEBUG"
+
+  if [[ -v DEBUG ]]; then
+    icon=$(f_yellow "$icon")
+    printf "[ %s ] %s\n" "$icon" "${message[*]}" >&2
+  fi
+}
+
 _format() {
   local start_code=$1
   local end_code=$2
   shift 2
 
-  echo -en "${start_code}$*${end_code}"
-}
-
-
-# =============================
-# Вывод отладочной информации
-# -----------------------------
-# Работает только в случае, если скрипт запущен в режиме отладки,
-# то есть с флагами -d или --debug.
-#
-# Использование: e_debug "Сообщение"
-# =============================
-e_debug() {
-  if [[ -v DEBUG ]]; then
-    echo -e "[ $(f_yellow "DEBUG") ] $*" >&2
-  fi
+  printf "%b%s%b" "$start_code" "$*" "$end_code"
 }
 
 
@@ -249,20 +273,20 @@ _init_terminal_list() {
 # =============================
 update_submodule() {
   if [[ $# -ne 1 ]]; then
-    echo "${F_ERROR}update_submodule() требует 1 аргумент — путь до сабмодуля." >&2
+    e_error "$(f_bold "update_submodule") требует 1 аргумент — путь до сабмодуля."
     return 1
   fi
 
   local submodule_name=$1
 
-  echo -e "${F_BLUE}Проверка и обновление сабмодуля $(f_bold "$submodule_name")..."
+  e_info "Проверка и обновление сабмодуля $(f_bold "$submodule_name")..."
 
   if ! git submodule update --init --remote -- "$submodule_name"; then
-    echo "Ошибка: Не удалось обновить сабмодуль $submodule_name." >&2
+    e_error "Не удалось обновить сабмодуль $submodule_name."
     return 1
   fi
 
-  echo -e "${F_GREEN}$(f_green "Сабмодуль успешно обновлен или уже актуален")"
+  e_done "$(f_green "Сабмодуль успешно обновлен или уже актуален")"
 }
 
 
@@ -284,7 +308,7 @@ update_submodule() {
 # =============================
 run_in_terminal() {
   if [[ $# -ne 1 ]]; then
-    echo -e "${F_ERROR}$(f_bold 'run_in_terminal') требует 1 аргумент — путь до скрипта." >&2
+    e_error "$(f_bold "run_in_terminal") требует 1 аргумент — путь до скрипта."
     return 1
   fi
 
@@ -295,13 +319,13 @@ run_in_terminal() {
   local args=()
 
   if [[ ! -f "$path_to_script" ]]; then
-    echo -e "${F_ERROR}Файл $(f_bold "$path_to_script") не существует." >&2
+    e_error "Файл $(f_bold "$path_to_script") не существует."
     return 1
   fi
 
   terminal=$(get_terminal)
   if [[ -z "$terminal" ]]; then
-    echo -e "${F_ERROR}Не удалось найти поддерживаемый эмулятор терминала." >&2
+    e_error "Не удалось найти поддерживаемый эмулятор терминала."
     exit 1
   fi
 
@@ -316,7 +340,7 @@ run_in_terminal() {
     args=("$path_to_script")
   fi
 
-  echo -e "${F_GREEN}Запуск $(f_bold "$path_to_script") в новом окне ($(f_bold "$term_name"))..."
+  e_done "Запуск $(f_bold "$path_to_script") в новом окне ($(f_bold "$term_name"))..."
   e_debug "Выполняется команда: $(f_bold "$terminal ${args[*]}")"
 
   "$terminal" "${args[@]}"
@@ -472,7 +496,7 @@ get_kde_default_terminal() {
     return 0
   fi
 
-  echo -e "${F_ERROR}Не удалось определить терминал для $(f_bold "$DE")" >&2
+  e_error "Не удалось определить терминал для $(f_bold "$DE")"
   return 1
 }
 
@@ -503,7 +527,7 @@ get_gnome_default_terminal() {
     return 0
   fi
 
-  echo -e "${F_ERROR}Не удалось определить терминал для $(f_bold "$DE")" >&2
+  e_error "Не удалось определить терминал для $(f_bold "$DE")"
   return 1
 }
 
@@ -554,7 +578,7 @@ get_xfce_default_terminal() {
   fi
 
   # Если совсем ничего не нашли (крайний случай)
-  echo -e "${F_ERROR}Не удалось определить терминал для $(f_bold "$DE")" >&2
+  e_error "Не удалось определить терминал для $(f_bold "$DE")"
   return 1
 }
 
@@ -568,14 +592,14 @@ get_xfce_default_terminal() {
 # Параметры:
 #   $1 — имя терминала (например, "konsole", "gnome-terminal")
 #
-# Возвращает (echo):
+# Возвращает (printf):
 #   Строку с флагом ("-e", "-x", "--") или пустую строку,
 #   если флаг не требуется (например, для kitty).
 #   Если терминал неизвестен, возвращает стандартный флаг "-e".
 # =============================
 get_term_flag() {
   if [[ $# -ne 1 ]]; then
-    echo -e "${F_ERROR}$(f_bold 'get_term_flag') требует 1 аргумент — название терминала." >&2
+    e_error "$(f_bold "get_term_flag") требует 1 аргумент — название терминала."
     return 1
   fi
 
@@ -648,7 +672,7 @@ if [[ -v DEBUG && $DEBUG_FORCE_WINDOW -eq 1 ]]; then
 fi
 
 if test -t 0; then
-  echo -e "${F_BLUE}Запуск интерактивного меню..."
+  e_info "Запуск интерактивного меню..."
   $TARGET_SCRIPT
   exit 0
 fi
