@@ -93,7 +93,7 @@ git clone --depth 1 https://github.com/cuberbug/cuberbug-walls.git
 
 * [WebP](https://developers.google.com/speed/webp?hl=ru) выбранный мною формат в качестве основного
     * [cwebp](https://developers.google.com/speed/webp/docs/cwebp?hl=ru) для работы со сжатием
-* [ImageMagick](https://github.com/nihui/waifu2x-ncnn-vulkan) иногда используется для конвертации
+* [ImageMagick](https://github.com/nihui/waifu2x-ncnn-vulkan) для создания превью
 * [waifu2x-ncnn-vulkan](https://github.com/nihui/waifu2x-ncnn-vulkan) для апскейлинга
 
 Для автоматической генерации таблиц с превью используется скрипт `./src/tables_generator.py` и GitHub Actons. Он активируется после обновления директории с превью, которая управляется мною при помощи локальных скриптов.
