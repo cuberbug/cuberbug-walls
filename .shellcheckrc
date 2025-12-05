@@ -1,0 +1,2 @@
+# Разрешить открытие любого файла 'source'
+external-sources=true
