@@ -4,30 +4,101 @@ set -o nounset
 set -o pipefail
 
 
+declare -A DETECTORS=(
+  ["KDE Plasma"]=is_kde
+  ["GNOME"]=is_gnome
+  ["XFCE"]=is_xfce
+)
+declare -A TERMINAL_GETTERS=(
+  ["KDE Plasma"]=get_kde_default_terminal
+  ["GNOME"]=get_gnome_default_terminal
+  ["XFCE"]=get_xfce_default_terminal
+)
+
+
+# =============================
+# Определение текущего графического окружения (DE)
+# -----------------------------
+# Функция выступает в роли диспетчера (Invoker). Она перебирает список известных
+# окружений, зарегистрированных в глобальном массиве DETECTORS, и по очереди
+# вызывает связанные с ними функции-проверки (стратегии).
+#
+# Принцип работы:
+#   1. Берет пару "Название DE" -> "Функция проверки" из массива DETECTORS.
+#   2. Запускает функцию проверки.
+#   3. Если функция вернула успех (код 0), считается, что DE найдено.
+#
+# Зависимости:
+#   Требует наличия глобального ассоциативного массива:
+#     declare -A DETECTORS
+#   Где ключ — название DE, а значение — имя функции для его проверки.
+#
+# Возвращает (stdout):
+#   Имя найденного окружения (ключ из массива), например "KDE Plasma".
+#
+# Код возврата:
+#   0 — Окружение успешно определено.
+#   1 — Ни один из детекторов не сработал или массив DETECTORS пуст.
+# =============================
+detect_de() {
+  local de
+
+  # Перебираем все ключи (названия DE) из массива
+  for de in "${!DETECTORS[@]}"; do
+    # Запускаем функцию проверки, имя которой лежит в DETECTORS["$de"].
+    # Если функция возвращает true (0), значит мы нашли нужное DE.
+    if ${DETECTORS["$de"]}; then
+      echo "$de"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+
 # =============================
 # Поиск терминала по умолчанию для DE пользователя
 # -----------------------------
-# Если удалось опредеить DE пользователя, то запустит для него поиск терминала по умолчанию.
+# Принимает название окружения (DE), находит соответствующую функцию-стратегию
+# в массиве TERMINAL_GETTERS и выполняет её для получения пути к терминалу.
 #
-# Возвращает: путь до бинарника найденного терминала
-#             или ничего.
-find_terminal_for_de() {
-  if is_kde; then
-    # shellcheck disable=SC2034
-    TERMINAL_FOR_DE="$(get_kde_default_terminal)"
-    return 0
-  elif is_gnome; then
-    # shellcheck disable=SC2034
-    TERMINAL_FOR_DE="$(get_gnome_default_terminal)"
-    return 0
-  elif is_xfce; then
-    # shellcheck disable=SC2034
-    TERMINAL_FOR_DE="$(get_xfce_default_terminal)"
-    return 0
-  else
-    e_debug "DE пользователя не поддерживается, либо его не удалось определить."
+# Параметры:
+#   $1 — название DE (строка, обязательно). Например: "KDE Plasma".
+#
+# Возвращает (stdout):
+#   Абсолютный путь к бинарному файлу терминала (например, "/usr/bin/konsole").
+#
+# Код возврата:
+#   0 — терминал успешно найден.
+#   1 — аргументы не переданы, DE не поддерживается или терминал не найден.
+# =============================
+get_terminal_for_de() {
+  if [[ $# -ne 1 ]]; then
+    e_error "$(f_bold "find_terminal_for_de") требует 1 аргумент — название DE."
     return 1
   fi
+
+  local de="$1"
+  local getter_func
+  local term_path
+
+  getter_func="${TERMINAL_GETTERS["$de"]}"
+
+  if [[ -z "$getter_func" ]]; then
+    e_debug "Для окружения '$de' нет определенной функции поиска терминала."
+    return 1
+  fi
+
+  if term_path=$("$getter_func"); then
+    if [[ -n "$term_path" ]]; then
+      echo "$term_path"
+      return 0
+    fi
+  fi
+
+  e_debug "DE пользователя не поддерживается, либо его не удалось определить."
+  return 1
 }
 
 
@@ -45,8 +116,8 @@ is_kde() {
     [[ "${DESKTOP_SESSION:-}" == "plasma" ]] ||
     [[ "${KDE_FULL_SESSION:-}" == "true" ]] ||
     pgrep -x "plasmashell" >/dev/null 2>&1; then
-    DE="KDE Plasma"
-    e_debug "Обнаружено окружение: $(f_bold "$DE")"
+
+    e_debug "Обнаружено окружение: $(f_bold "KDE Plasma")"
     return 0
   fi
   return 1
@@ -59,8 +130,8 @@ is_gnome() {
     [[ "$desktop_env" == *"MATE"* ]] ||
     [[ "${DESKTOP_SESSION:-}" == "gnome" ]] ||
     pgrep -x "gnome-shell" >/dev/null 2>&1; then
-    DE="GNOME"
-    e_debug "Обнаружено окружение: $(f_bold "$DE")"
+
+    e_debug "Обнаружено окружение: $(f_bold "GNOME")"
     return 0
   fi
   return 1
@@ -70,8 +141,8 @@ is_xfce() {
   if [[ "${XDG_CURRENT_DESKTOP:-}" == *"XFCE"* ]] ||
     [[ "${DESKTOP_SESSION:-}" == "xfce" ]] ||
     pgrep -fx "xfce4-session" >/dev/null 2>&1; then
-    DE="XFCE"
-    e_debug "Обнаружено окружение: $(f_bold "$DE")"
+
+    e_debug "Обнаружено окружение: $(f_bold "XFCE")"
     return 0
   fi
   return 1
@@ -88,7 +159,9 @@ is_xfce() {
 # =============================
 
 get_kde_default_terminal() {
-  local term_bin kconfig_cmd
+  local de="KDE Plasma"
+  local term_path
+  local kconfig_cmd
 
   if command -v kreadconfig6 >/dev/null 2>&1; then
     kconfig_cmd="kreadconfig6"
@@ -97,12 +170,12 @@ get_kde_default_terminal() {
   fi
 
   if [[ -n "$kconfig_cmd" ]]; then
-    e_debug "Чтение конфига $(f_bold "$DE") через $(f_bold "$kconfig_cmd")..."
-    term_bin="$($kconfig_cmd --file kdeglobals --group General --key TerminalApplication)"
+    e_debug "Чтение конфига $(f_bold "$de") через $(f_bold "$kconfig_cmd")..."
+    term_path="$($kconfig_cmd --file kdeglobals --group General --key TerminalApplication)"
 
-    if [[ -n "$term_bin" ]]; then
-      e_debug "Конфигурация вернула: $(f_green "$term_bin")"
-      echo "$term_bin"
+    if [[ -n "$term_path" ]]; then
+      e_debug "Конфигурация вернула: $(f_green "$term_path")"
+      echo "$term_path"
       return 0
     else
       e_debug "Ключ $(f_bold "TerminalApplication") пуст или не найден."
@@ -112,29 +185,30 @@ get_kde_default_terminal() {
   fi
 
   # Попытка вернуть дефолт для KDE
-  if term_bin=$(command -v konsole) && [[ -n "$term_bin" ]]; then
-    e_debug "Возврат дефолтного терминала для $(f_bold "$DE")"
-    echo "$term_bin"
+  if term_path=$(command -v konsole) && [[ -n "$term_path" ]]; then
+    e_debug "Возврат дефолтного терминала для $(f_bold "$de")"
+    echo "$term_path"
     return 0
   fi
 
-  e_error "Не удалось определить терминал для $(f_bold "$DE")"
+  e_error "Не удалось определить терминал для $(f_bold "$de")"
   return 1
 }
 
 get_gnome_default_terminal() {
-  local term_bin
+  local de="GNOME"
+  local term_path
 
   if command -v gsettings >/dev/null 2>&1; then
     e_debug "Запрос $(f_bold "'gsettings get ...'")"
-    term_bin="$(gsettings get org.gnome.desktop.applications terminal exec 2>/dev/null)"
-    term_bin="${term_bin//\'/}"  # Удаление кавычек
-    term_bin="${term_bin%% *}"   # Берёт только первый токен (на случай аргументов)
+    term_path="$(gsettings get org.gnome.desktop.applications terminal exec 2>/dev/null)"
+    term_path="${term_path//\'/}"  # Удаляем кавычки
+    term_path="${term_path%% *}"   # Берём только первый токен (на случай аргументов)
 
-    if [[ -n "$term_bin" ]]; then
-      if command -v "$term_bin" &>/dev/null; then
-        e_debug "gsettings вернул: $(f_green "$term_bin")"
-        echo "$term_bin"
+    if [[ -n "$term_path" ]]; then
+      if command -v "$term_path" &>/dev/null; then
+        e_debug "gsettings вернул: $(f_green "$term_path")"
+        echo "$term_path"
         return 0
       fi
     fi
@@ -143,36 +217,37 @@ get_gnome_default_terminal() {
   fi
 
   # Попытка вернуть дефолт для GNOME
-  if term_bin=$(command -v gnome-terminal) && [[ -n "$term_bin" ]]; then
-    e_debug "Возврат дефолтного терминала для $(f_bold "$DE")"
-    echo "$term_bin"
+  if term_path=$(command -v gnome-terminal) && [[ -n "$term_path" ]]; then
+    e_debug "Возврат дефолтного терминала для $(f_bold "$de")"
+    echo "$term_path"
     return 0
   fi
 
-  e_error "Не удалось определить терминал для $(f_bold "$DE")"
+  e_error "Не удалось определить терминал для $(f_bold "$de")"
   return 1
 }
 
 get_xfce_default_terminal() {
   local config_file="$HOME/.config/xfce4/helpers.rc"
-  local term_bin
+  local de="XFCE"
+  local term_path
 
   # XFCE хранит настройки приложений по умолчанию (через exo) в helpers.rc
   if [[ -f "$config_file" ]]; then
     e_debug "Чтение файла: $(f_bold "$config_file")"
-    term_bin=$(grep "^TerminalEmulator=" "$config_file" | cut -d'=' -f2)
-    e_debug "Найдено значение $(f_bold "TerminalEmulator"): $(f_green "$term_bin")"
+    term_path=$(grep "^TerminalEmulator=" "$config_file" | cut -d'=' -f2)
+    e_debug "Найдено значение $(f_bold "TerminalEmulator"): $(f_green "$term_path")"
   else
     e_debug "Файл конфигурации $(f_bold "$config_file") не найден."
   fi
 
-  # Проверка значения из 'helpers.rc'
-  if [[ -n "$term_bin" ]] && command -v "$term_bin" >/dev/null 2>&1; then
-    e_debug "$(f_bold "helpers.rc") вернул: $(f_green "$term_bin")"
-    echo "$term_bin"
+  # Проверяем значения из 'helpers.rc'
+  if [[ -n "$term_path" ]] && command -v "$term_path" >/dev/null 2>&1; then
+    e_debug "$(f_bold "helpers.rc") вернул: $(f_green "$term_path")"
+    echo "$term_path"
     return 0
   # Или 'custom-TerminalEmulator.desktop'
-  elif [[ "$term_bin" == "custom-TerminalEmulator" ]]; then
+  elif [[ "$term_path" == "custom-TerminalEmulator" ]]; then
     local custom_helper="$HOME/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop"
 
     e_debug "Обнаружен $(f_bold "custom-TerminalEmulator")," \
@@ -193,13 +268,12 @@ get_xfce_default_terminal() {
   fi
 
   # Попытка вернуть дефолт для XFCE
-  if term_bin=$(command -v xfce4-terminal) && [[ -n "$term_bin" ]]; then
-    e_debug "Возврат дефолтного терминала для $(f_bold "$DE")"
-    echo "$term_bin"
+  if term_path=$(command -v xfce4-terminal) && [[ -n "$term_path" ]]; then
+    e_debug "Возврат дефолтного терминала для $(f_bold "$de")"
+    echo "$term_path"
     return 0
   fi
 
-  # Если совсем ничего не нашли (крайний случай)
-  e_error "Не удалось определить терминал для $(f_bold "$DE")"
+  e_error "Не удалось определить терминал для $(f_bold "$de")"
   return 1
 }

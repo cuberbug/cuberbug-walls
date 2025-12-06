@@ -62,8 +62,6 @@ init_env() {
   REPO_ROOT="$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)"
   e_debug "REPO_ROOT = $REPO_ROOT"
   TARGET_SCRIPT="${REPO_ROOT}/tools/start"
-  DE=""
-  TERMINAL_FOR_DE=""
 
 
   e_debug "Переменные окружения подготовлены."

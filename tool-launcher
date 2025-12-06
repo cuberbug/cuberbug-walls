@@ -50,13 +50,12 @@ init_format
 show_hello
 
 # =============================
-init_env
-# -----------------------------
 # Инициализирует важные переменные:
-#
+# -----------------------------
 # - REPO_TOOLS_SUBMODULE_NAME
 # - REPO_ROOT
 # =============================
+init_env
 
 update_submodule "$REPO_TOOLS_SUBMODULE_NAME" "$REPO_ROOT"
 

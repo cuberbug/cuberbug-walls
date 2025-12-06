@@ -43,11 +43,11 @@ run_in_terminal() {
     exit 1
   fi
 
-  # Извлечение чистого имени (например, /usr/bin/konsole -> konsole)
+  # Извлекаем чистое имя (например, /usr/bin/konsole -> konsole)
   term_name="${terminal##*/}"
   flag=$(get_term_flag "$term_name")
 
-  # Формирование массива аргументов
+  # Формируем массив аргументов
   if [[ -n "$flag" ]]; then
     args=("$flag" "$path_to_script")
   else
@@ -73,15 +73,17 @@ run_in_terminal() {
 # Возвращает: путь до бинарника терминала.
 # =============================
 get_terminal() {
+  local de
   local terminal
 
-  find_terminal_for_de
-  terminal=$TERMINAL_FOR_DE
+  if de=$(detect_de); then
+    terminal=$(get_terminal_for_de "$de")
 
-  if [[ -n "$terminal" ]]; then
-    e_debug "Для $(f_bold "$DE") используется терминал: $(f_bold "$terminal")"
-    echo "$terminal"
-    return 0
+    if [[ -n "$terminal" ]]; then
+      e_debug "Для $(f_bold "$de") используется терминал: $(f_bold "$terminal")"
+      echo "$terminal"
+      return 0
+    fi
   fi
 
   e_debug "Не удалось определить DE или терминал для него. Перебор списка по умолчанию..."
