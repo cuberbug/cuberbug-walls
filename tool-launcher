@@ -52,12 +52,12 @@ show_hello
 # =============================
 # Инициализирует важные переменные:
 # -----------------------------
-# - REPO_TOOLS_SUBMODULE_NAME
+# - REPO_TOOLS_PATH
 # - REPO_ROOT
 # =============================
 init_env
 
-update_submodule "$REPO_TOOLS_SUBMODULE_NAME" "$REPO_ROOT"
+update_submodule "$REPO_TOOLS_PATH" "$REPO_ROOT" "$TARGET_BRANCH"
 
 if [[ -v DEBUG && $DEBUG_FORCE_WINDOW -eq 1 ]]; then
   e_debug "$(f_bold "Запуск в режиме отладки") (открытие нового окна принудительно)"

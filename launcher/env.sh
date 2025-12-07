@@ -9,6 +9,7 @@ USE_COLOR=1
 unset DEBUG
 unset NO_WINDOW
 unset USE_COLOR_SET_BY_CLI
+unset TOOLS_BRANCH
 
 
 # =============================
@@ -22,6 +23,16 @@ unset USE_COLOR_SET_BY_CLI
 parse_args() {
   while [[ $# -gt 0 ]]; do
     case "${1:-}" in
+      -b|--branch)
+        if [[ -n "${2:-}" && "${2:0:1}" != "-" ]]; then
+          TOOLS_BRANCH="$2"
+          shift
+        else
+          echo "Ошибка: Аргумент --branch требует указания названия ветки (например: --branch dev)." >&2
+          exit 1
+        fi
+        shift
+        ;;
       -N|--no-color) USE_COLOR=0; USE_COLOR_SET_BY_CLI=1; shift ;;
       -W|--no-window) NO_WINDOW=1; shift ;;
       -d|--debug) DEBUG=1; shift ;;
@@ -57,15 +68,16 @@ init_env() {
     exit 1
   fi
 
-  # Хранит название конфигурации из .gitmodules для использования
-  REPO_TOOLS_SUBMODULE_NAME="tools"
   REPO_ROOT="$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)"
-  e_debug "REPO_ROOT = $REPO_ROOT"
   TARGET_SCRIPT="${REPO_ROOT}/tools/start"
+
+  REPO_TOOLS_PATH="tools"
+  TARGET_BRANCH="${TOOLS_BRANCH:-main}"
 
 
   e_debug "Переменные окружения подготовлены."
   e_debug "Рабочая директория: $(f_bold "$SCRIPT_DIR")"
+  e_debug "Целевая ветка tools: $(f_bold "$TARGET_BRANCH")"
   e_debug "Целевой скрипт: $(f_bold "$TARGET_SCRIPT")"
 }
 
