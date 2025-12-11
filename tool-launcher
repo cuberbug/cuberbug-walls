@@ -62,7 +62,7 @@ update_submodule "$REPO_TOOLS_PATH" "$REPO_ROOT" "$TARGET_BRANCH"
 # Срабатывает, если задан флаг --debug (-d), но НЕ задан --no-window (-W).
 if [[ -v DEBUG && $DEBUG_FORCE_WINDOW -eq 1 ]]; then
   e_debug "$(f_bold "Запуск в режиме отладки") (открытие нового окна принудительно)"
-  run_in_terminal "$TARGET_SCRIPT" #"${TARGET_ARGS[@]}"
+  run_in_terminal "$TARGET_SCRIPT" "${TARGET_ARGS[@]}"
   exit 0
 fi
 
