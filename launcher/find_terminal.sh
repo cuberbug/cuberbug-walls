@@ -11,6 +11,7 @@ set -o pipefail
 #
 # Параметры:
 #   $1 — путь к исполняемому файлу (обязательно)
+#   $@ — аргументы для передачи в целевой скрипт
 #
 # Определяет терминал по умолчанию через get_terminal()
 # и подбирает корректный ключ запуска (-e, -x или --),
@@ -21,12 +22,8 @@ set -o pipefail
 #   1 — ошибка аргументов или отсутствующий файл
 # =============================
 run_in_terminal() {
-  if [[ $# -ne 1 ]]; then
-    e_error "$(f_bold "run_in_terminal") требует 1 аргумент — путь до скрипта."
-    return 1
-  fi
-
-  local path_to_script=$1
+  local path_to_script=$1; shift
+  local target_args=("$@")
   local terminal
   local term_name
   local flag
@@ -55,9 +52,10 @@ run_in_terminal() {
   fi
 
   e_done "Запуск $(f_bold "$path_to_script") в новом окне ($(f_bold "$term_name"))..."
-  e_debug "Выполняется команда: $(f_bold "$terminal ${args[*]}")"
+  # target_args не будет пуст, так как в режиме отладки содержит --debug или -d
+  e_debug "Выполняется команда: $(f_bold "$terminal ${args[*]} ${target_args[*]}")"
 
-  "$terminal" "${args[@]}"
+  "$terminal" "${args[@]}" "${target_args[@]}"
 }
 
 
@@ -146,6 +144,7 @@ get_term_flag() {
       flag="-e"
       ;;
   esac
+  e_debug "get_term_flag: [$flag]"
 
   # Необходимо для корректной передачи флагов, которые echo может интерпретировать как опцию
   printf "%s" "$flag"

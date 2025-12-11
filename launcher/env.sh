@@ -10,17 +10,24 @@ unset DEBUG
 unset NO_WINDOW
 unset USE_COLOR_SET_BY_CLI
 unset TOOLS_BRANCH
+unset TARGET_ARGS
 
 
 # =============================
 # Разбор аргументов командной строки
 # -----------------------------
-# Читает переданные скрипту ключи и переопределяет глобальные переменные конфигурации.
+# Читает переданные скрипту опции и переопределяет глобальные переменные конфигурации.
+#
+# Ключи, которые дублируются в массив TARGET_ARGS:
+#   --no-color    логика находится в 'ui.sh / init_format'
+#   --debug, -d   добавляется в массив сразу при разборе
 #
 # Параметры:
 #   $@ — все аргументы скрипта
 # =============================
 parse_args() {
+  TARGET_ARGS=()
+
   while [[ $# -gt 0 ]]; do
     case "${1:-}" in
       -b|--branch)
@@ -35,7 +42,7 @@ parse_args() {
         ;;
       -N|--no-color) USE_COLOR=0; USE_COLOR_SET_BY_CLI=1; shift ;;
       -W|--no-window) NO_WINDOW=1; shift ;;
-      -d|--debug) DEBUG=1; shift ;;
+      -d|--debug) DEBUG=1; TARGET_ARGS+=("$1"); shift ;;
       -h|--help|help) show_help; exit 0 ;;
       -v|--version) echo "v$VERSION"; exit 0 ;;
       -*)
@@ -79,6 +86,7 @@ init_env() {
   e_debug "Рабочая директория: $(f_bold "$SCRIPT_DIR")"
   e_debug "Целевая ветка tools: $(f_bold "$TARGET_BRANCH")"
   e_debug "Целевой скрипт: $(f_bold "$TARGET_SCRIPT")"
+  e_debug "Аргументы для передачи: $(f_bold "${TARGET_ARGS[*]:-none}")"
 }
 
 
