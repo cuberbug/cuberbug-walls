@@ -14,7 +14,7 @@
   <tbody>
     <tr>
       <td align="center" style="white-space: nowrap;">Директории</td>
-      <td rowspan=10 align="center">
+      <td rowspan=12 align="center">
         <a href="./wallpapers/other/1762278931.webp">
           <img
             src="./wallpapers/other/1762278931.webp"
@@ -55,12 +55,19 @@
         <a href="./wallpapers/artists/Grym3ik/README.md">Grym3ik</a>
       </td>
     </tr>
+    <tr>
+      <td align="center" style="white-space: nowrap;">
+        <a href="./wallpapers/artists/HOJI/README.md">HOJI</a>
+      </td>
+    </tr>
+    <tr>
       <td align="center">
         <img
           src="./.previews/1763526658.webp"
           alt="Cute microcat-girl"
         >
       </td>
+    </tr>
   </tbody>
 </table>
 
@@ -72,7 +79,8 @@
 /cuberbug-walls/
 └── wallpapers   # Коллекция обоев в высоком разрешении
     ├── artists    # Именные директории для художников
-    │   └── Grym3ik  # Содержит подробную информацию и галерею
+    │   ├── Grym3ik  # Необычный стиль, вызывающий необычные эмоции
+    │   └── HOJI     # Потрясающая детализация
     ├── bucket     # Корзина: файлы в ней будут удалены через некоторое время
     ├── contrib    # Для предложений ваших изображений в коллекцию
     ├── desktop    # Горизонтальный формат

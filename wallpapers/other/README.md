@@ -5,7 +5,7 @@
 | Превью | Художники |
 | :--- | :--- |
 | [desktop](/wallpapers/desktop/README.md) | [Grym3ik](/wallpapers/artists/Grym3ik/README.md) |
-| [mobile](/wallpapers/mobile/README.md) |  |
+| [mobile](/wallpapers/mobile/README.md) | [HOJI](/wallpapers/artists/HOJI/README.md) |
 | ➤ **other** |  |
 
 
