@@ -64,7 +64,6 @@
 | [![preview](/.previews/artists/Nakkar7/1766772080.webp)](/wallpapers/artists/Nakkar7/1766772080.webp) | [![preview](/.previews/artists/Nakkar7/1766772112.webp)](/wallpapers/artists/Nakkar7/1766772112.webp) |
 | [![preview](/.previews/artists/Nakkar7/1766772247.webp)](/wallpapers/artists/Nakkar7/1766772247.webp) | [![preview](/.previews/artists/Nakkar7/1766772287.webp)](/wallpapers/artists/Nakkar7/1766772287.webp) |
 | [![preview](/.previews/artists/Nakkar7/1766772344.webp)](/wallpapers/artists/Nakkar7/1766772344.webp) | [![preview](/.previews/artists/Nakkar7/1766772402.webp)](/wallpapers/artists/Nakkar7/1766772402.webp) |
-
 | [![preview](/.previews/artists/Nakkar7/1766772454.webp)](/wallpapers/artists/Nakkar7/1766772454.webp) | [![preview](/.previews/artists/Nakkar7/1766772505.webp)](/wallpapers/artists/Nakkar7/1766772505.webp) |
 | [![preview](/.previews/artists/Nakkar7/1766772563.webp)](/wallpapers/artists/Nakkar7/1766772563.webp) | ❤️ |
 
