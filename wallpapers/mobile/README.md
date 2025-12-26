@@ -6,7 +6,7 @@
 | :--- | :--- |
 | [desktop](/wallpapers/desktop/README.md) | [Grym3ik](/wallpapers/artists/Grym3ik/README.md) |
 | ➤ **mobile** | [HOJI](/wallpapers/artists/HOJI/README.md) |
-| [other](/wallpapers/other/README.md) |  |
+| [other](/wallpapers/other/README.md) | [Nakkar7](/wallpapers/artists/Nakkar7/README.md) |
 
 ## 🐾 Mobile
 

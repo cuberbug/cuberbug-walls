@@ -13,28 +13,16 @@
   </thead>
   <tbody>
     <tr>
-      <td align="center" style="white-space: nowrap;">Директории</td>
+      <td align="center" style="white-space: nowrap;">
+        <a href="./wallpapers/desktop/README.md">🖥️ desktop</a>
+      </td>
       <td rowspan=12 align="center">
-        <a href="./wallpapers/other/1762278931.webp">
+        <a href="./wallpapers/desktop/1762262506.webp">
           <img
-            src="./wallpapers/other/1762278931.webp"
+            src="./.previews/menu.webp"
             alt="Cute cat-girl"
           >
         </a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;"><a href="./wallpapers/">📁 wallpapers</a></td>
-    </tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;"><a href="./wallpapers/artists/">📁 artists</a></td>
-    </tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;">Превью</td>
-    </tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/desktop/README.md">🖥️ desktop</a>
       </td>
     </tr>
     <tr>
@@ -61,11 +49,8 @@
       </td>
     </tr>
     <tr>
-      <td align="center">
-        <img
-          src="./.previews/1763526658.webp"
-          alt="Cute microcat-girl"
-        >
+      <td align="center" style="white-space: nowrap;">
+        <a href="./wallpapers/artists/Nakkar7/README.md">Nakkar7</a>
       </td>
     </tr>
   </tbody>
@@ -80,7 +65,8 @@
 └── wallpapers   # Коллекция обоев в высоком разрешении
     ├── artists    # Именные директории для художников
     │   ├── Grym3ik  # Необычный стиль, вызывающий необычные эмоции
-    │   └── HOJI     # Потрясающая детализация
+    │   ├── HOJI     # Потрясающая детализация
+    │   └── Nakkar7  # Милое сочетание фотографии и графики
     ├── bucket     # Корзина: файлы в ней будут удалены через некоторое время
     ├── contrib    # Для предложений ваших изображений в коллекцию
     ├── desktop    # Горизонтальный формат
