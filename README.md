@@ -82,6 +82,14 @@
 git clone --depth 1 https://github.com/cuberbug/cuberbug-walls.git
 ```
 
+Или клонировать только определённые директории:
+```shell
+git clone --filter=blob:none --no-checkout --depth=1 https://github.com/cuberbug/cuberbug-walls.git
+cd cuberbug-walls
+git sparse-checkout set wallpapers/mobile # Директория с обоями для телефонов, например
+git checkout
+```
+
 #### 🐾 Технические детали
 
 Для оптимизации хранения используются инструменты апскейлинга и сжатия изображений.
