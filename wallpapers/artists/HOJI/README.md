@@ -34,3 +34,7 @@
 | [![preview](/.previews/artists/HOJI/1765628903.webp)](/wallpapers/artists/HOJI/1765628903.webp) | [![preview](/.previews/artists/HOJI/1765629073.webp)](/wallpapers/artists/HOJI/1765629073.webp) |
 | [![preview](/.previews/artists/HOJI/1765631358.webp)](/wallpapers/artists/HOJI/1765631358.webp) | [![preview](/.previews/artists/HOJI/1765631592.webp)](/wallpapers/artists/HOJI/1765631592.webp) |
 | [![preview](/.previews/artists/HOJI/1765631676.webp)](/wallpapers/artists/HOJI/1765631676.webp) | [![preview](/.previews/artists/HOJI/1765631908.webp)](/wallpapers/artists/HOJI/1765631908.webp) |
+| [![preview](/.previews/artists/HOJI/1767081791.webp)](/wallpapers/artists/HOJI/1767081791.webp) | [![preview](/.previews/artists/HOJI/1767082347.webp)](/wallpapers/artists/HOJI/1767082347.webp) |
+| [![preview](/.previews/artists/HOJI/1767083865.webp)](/wallpapers/artists/HOJI/1767083865.webp) | [![preview](/.previews/artists/HOJI/1767086694.webp)](/wallpapers/artists/HOJI/1767086694.webp) |
+| [![preview](/.previews/artists/HOJI/1767086889.webp)](/wallpapers/artists/HOJI/1767086889.webp) | [![preview](/.previews/artists/HOJI/1767087117.webp)](/wallpapers/artists/HOJI/1767087117.webp) |
+
