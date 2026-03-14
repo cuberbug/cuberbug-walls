@@ -1,12 +1,13 @@
-<h1 align="center">🌊 ₍^. ̫ .^₎⟆ 🌊</h1>
+<h1 align="center">🌊 ₍^. ̫ .^₎⟆</h1>
 
-[🏠 На главную](/)
+[🏠 Главная](https://github.com/cuberbug/cuberbug-walls) / wallpapers / artists / ➤ **Grym3ik**
 
-| Превью | Художники |
-| :--- | :--- |
-| [desktop](/wallpapers/desktop/README.md) | ➤ **Grym3ik** |
-| [mobile](/wallpapers/mobile/README.md) | [HOJI](/wallpapers/artists/HOJI/README.md) |
-| [other](/wallpapers/other/README.md) | [Nakkar7](/wallpapers/artists/Nakkar7/README.md) |
+| 📚 subjects | 🖥️ desktop | 📱 mobile | ☁️ other | 🐾 | 🎨 artists |
+| :--- | :--- | :--- | :--- | :---: | :--- |
+| **Общее** | [portrait](/wallpapers/desktop/portrait/README.md) | [mobile](/wallpapers/mobile/README.md) | [other](/wallpapers/other/README.md) | 🐾 | ➤ **Grym3ik** |
+|  | [scene](/wallpapers/desktop/scene/README.md) |  |  | 🐾 | [HOJI](/wallpapers/artists/HOJI/README.md) |
+| **Touhou** | [desktop](/wallpapers/subjects/Touhou/desktop/README.md) | [mobile](/wallpapers/subjects/Touhou/mobile/README.md) |  | 🐾 | [Nakkar7](/wallpapers/artists/Nakkar7/README.md) |
+| **Vocaloid** | [desktop](/wallpapers/subjects/Vocaloid/desktop/README.md) | [mobile](/wallpapers/subjects/Vocaloid/mobile/README.md) |  | 🐾 |  |
 
 # Grym3ik
 

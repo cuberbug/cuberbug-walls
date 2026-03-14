@@ -5,74 +5,50 @@
 Коллекция обоев для рабочего стола и пространство экспериментов в автоматизации и программировании!  
 Здесь вы сможете как насладиться красивыми изображениями, так и попробовать набор инструментов, написанных специально для удобного управления этим репозиторием.
 
-<table>
-  <thead>
-    <tr>
-      <th style="white-space: nowrap;"><b>🐾 Навигация</b></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/desktop/README.md">🖥️ desktop</a>
-      </td>
-      <td rowspan=12 align="center">
-        <a href="./wallpapers/desktop/1762262506.webp">
-          <img
-            src="./.previews/menu.webp"
-            alt="Cute cat-girl"
-          >
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/mobile/README.md">📱 mobile</a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/other/README.md">☁️ other</a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;">Художники</td>
-    </tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/artists/Grym3ik/README.md">Grym3ik</a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/artists/HOJI/README.md">HOJI</a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" style="white-space: nowrap;">
-        <a href="./wallpapers/artists/Nakkar7/README.md">Nakkar7</a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+## 🐾 Навигация
+<div align="center">
+  <a href="./wallpapers/desktop/1762262506.webp">
+    <img
+      src="./.previews/menu.webp"
+      alt="Cute cat-girl"
+    >
+  </a>
+</div>
+
+➤ **🏠 Главная**
+
+| 📚 subjects | 🖥️ desktop | 📱 mobile | ☁️ other | 🐾 | 🎨 artists |
+| :--- | :--- | :--- | :--- | :---: | :--- |
+| **Общее** | [portrait](/wallpapers/desktop/portrait/README.md) | [mobile](/wallpapers/mobile/README.md) | [other](/wallpapers/other/README.md) | 🐾 | [Grym3ik](/wallpapers/artists/Grym3ik/README.md) |
+|  | [scene](/wallpapers/desktop/scene/README.md) |  |  | 🐾 | [HOJI](/wallpapers/artists/HOJI/README.md) |
+| **Touhou** | [desktop](/wallpapers/subjects/Touhou/desktop/README.md) | [mobile](/wallpapers/subjects/Touhou/mobile/README.md) |  | 🐾 | [Nakkar7](/wallpapers/artists/Nakkar7/README.md) |
+| **Vocaloid** | [desktop](/wallpapers/subjects/Vocaloid/desktop/README.md) | [mobile](/wallpapers/subjects/Vocaloid/mobile/README.md) |  | 🐾 |  |
+
 
 ### 🐾 А где?
 
-А вот! Все картинки находятся внутри `./wallpapers/` и отсортированы по типам и формату:
+А вот! Все картинки находятся внутри `wallpapers/` и отсортированы по типам и формату:
 
 ```shell
 /cuberbug-walls/
-└── wallpapers   # Коллекция обоев
-    ├── artists    # Именные директории для художников
-    │   ├── Grym3ik  # Необычный стиль, вызывающий необычные эмоции
-    │   ├── HOJI     # Потрясающая детализация
-    │   └── Nakkar7  # Милое сочетание фотографии и графики
-    ├── bucket     # Корзина: файлы в ней будут удалены через некоторое время
-    ├── contrib    # Для предложений ваших изображений в коллекцию
-    ├── desktop    # Горизонтальный формат
-    ├── mobile     # Вертикальный формат
-    └── other      # Изображения без категории
+└── wallpapers  # Коллекция обоев
+    ├── artists     # Именные директории для художников
+    │   ├── Grym3ik     # Необычный стиль, вызывающий необычные эмоции
+    │   ├── HOJI        # Потрясающая детализация
+    │   └── Nakkar7     # Милое сочетание фотографии и графики
+    ├── bucket      # Корзина: файлы в ней будут удалены через некоторое время
+    ├── desktop     # Горизонтальный формат
+    │   ├── scene       # Для гармонично проработанных артов
+    │   └── portrait    # Для работ с упрощённым фоном
+    ├── mobile      # Вертикальный формат
+    ├── other       # Изображения без категории
+    └── subjects    # Тематические подборки изображений
+        ├── Touhou      # Всё, что связано с франшизой Touhou Project
+        │   ├── desktop
+        │   └── mobile
+        └── Vocaloid    # Вокалоиды
+            ├── desktop
+            └── mobile
 ```
 
 ### 🐾 Клонирование
@@ -99,18 +75,18 @@ git checkout
 * [ImageMagick](https://github.com/nihui/waifu2x-ncnn-vulkan) для создания превью
 * [waifu2x-ncnn-vulkan](https://github.com/nihui/waifu2x-ncnn-vulkan) для апскейлинга
 
-Для автоматической генерации таблиц с превью используется скрипт `./src/tables_generator.py` и GitHub Actons. Он активируется после обновления директории с превью, которая управляется мною при помощи локальных скриптов.
+Для автоматической генерации таблиц с превью используется скрипт `src/tables_generator.py` и GitHub Actons. Он активируется после обновления директории с превью, которая управляется мною при помощи локальных скриптов.
 
 ---
 
 # 🛠️ Инструменты
 
->Сразу после клонирования директория `./tools/` будет пуста: всё так и должно быть! Если вам не хочется устанавливать инструменты — просто не запускайте `tool-launcher`.
+>Сразу после клонирования директория `tools/` будет пуста: всё так и должно быть! Если вам не хочется устанавливать инструменты — просто не запускайте `tool-launcher`.
 
-Чтобы начать пользоваться инструментами, запустите скрипт `tool-launcher` из корня репозитория (например, `./tool-launcher`). Он всё сделает сам:
+Чтобы начать пользоваться инструментами, запустите скрипт `tool-launcher` из корня репозитория (например, `tool-launcher`). Он всё сделает сам:
 
-* **Автоматически** загрузит или обновит набор инструментов **Repo-Tools** в директорию `./tools/`.
-* **Запустит TUI-меню** (`./tools/start`) в новом окне терминала, если вы запустили его двойным кликом (тихий режим), или прямо в текущем, если запустили его командой в терминале.
+* **Автоматически** загрузит или обновит набор инструментов **Repo-Tools** в директорию `tools/`.
+* **Запустит TUI-меню** (`tools/start`) в новом окне терминала, если вы запустили его двойным кликом (тихий режим), или прямо в текущем, если запустили его командой в терминале.
 
 Всё готово к использованию! **Repo-Tools** предложит вам установить виртуальное окружение и необходимые зависимости, чтобы вы сразу могли перейти к работе.
 
@@ -162,7 +138,7 @@ sudo apt install python3-venv
 ## ⚙️ **Repo-Tools**
 
 [**Repo-Tools**](https://github.com/cuberbug/repo-tools) — это отдельный репозиторий с набором инструментов, подключающийся сюда посредством установки сабмодуля.
-Для этого достаточно запустить `./tool-launcher` — он всё сделает сам, а содержимое репозитория **Repo-Tools** окажется в директории `./tools/`, после чего будет запущен скрипт `./tools/start`, который предложет автоматически установить виртуальное окружение Python вместе с зависимостями и предложит запустить интерактивное TUI-меню, в котором доступен запуск любого из инструментов.
+Для этого достаточно запустить `tool-launcher` — он всё сделает сам, а содержимое репозитория **Repo-Tools** окажется в директории `tools/`, после чего будет запущен скрипт `tools/start`, который предложет автоматически установить виртуальное окружение Python вместе с зависимостями и предложит запустить интерактивное TUI-меню, в котором доступен запуск любого из инструментов.
 
 ### 🐾 Menu
 
