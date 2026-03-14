@@ -40,6 +40,26 @@ class TableGenerator:
         with open(config_path, "r", encoding="utf-8") as file:
             return yaml.safe_load(file)
 
+    def _walk_directories(self, directory: Path) -> None:
+        """
+        Рекурсивно обходит директории и обрабатывает их.
+        """
+        for entry in directory.iterdir():
+            if not entry.is_dir():
+                continue
+
+            if entry.name in self.exclude_dirs:
+                print(f"  -> Пропускается исключенная директория: {entry.name}")
+                continue
+
+            print(f"  -> Обработка директории: {entry.relative_to(self.wallpapers_dir)}")
+
+            # обработка текущей директории
+            self.process_directory(entry)
+
+            # рекурсивный спуск
+            self._walk_directories(entry)
+
     def _find_readme_with_markers(
         self, readme_path: Path
     ) -> tuple[bool, str, str, str]:
@@ -186,22 +206,11 @@ class TableGenerator:
 
     def run(self) -> None:
         """
-        Основной цикл: проходит по поддиректориям и запускает обработку.
+        Основной цикл: рекурсивно обходит каталог обоев.
         """
         print(f"Начинается обработка каталога: {self.wallpapers_dir}")
 
-        for subdir in self.wallpapers_dir.iterdir():
-            if not subdir.is_dir():
-                continue
-
-            if subdir.name in self.exclude_dirs:
-                print(
-                    f"  -> Пропускается исключенная директория: {subdir.name}"
-                )
-                continue
-
-            print(f"  -> Обработка директории: {subdir.name}")
-            self.process_directory(subdir)
+        self._walk_directories(self.wallpapers_dir)
 
         print("Обработка завершена.")
 
