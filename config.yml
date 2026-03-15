@@ -6,7 +6,6 @@ previews_dir: ".previews"
 exclude_dirs:
   - "artists"
   - "bucket"
-  - "contrib"
 
 # Поддерживаемые расширения изображений
 allowed_extensions:
