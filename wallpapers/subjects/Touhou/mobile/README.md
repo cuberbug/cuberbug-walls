@@ -23,7 +23,7 @@
 | :---: | :---: | :---: |
 | [![preview](/.previews/subjects/Touhou/mobile/1767093102.webp)](/wallpapers/subjects/Touhou/mobile/1767093102.webp) | [![preview](/.previews/subjects/Touhou/mobile/1767093137.webp)](/wallpapers/subjects/Touhou/mobile/1767093137.webp) | [![preview](/.previews/subjects/Touhou/mobile/1767093167.webp)](/wallpapers/subjects/Touhou/mobile/1767093167.webp) |
 | [![preview](/.previews/subjects/Touhou/mobile/1767617000.webp)](/wallpapers/subjects/Touhou/mobile/1767617000.webp) | [![preview](/.previews/subjects/Touhou/mobile/1767649468.webp)](/wallpapers/subjects/Touhou/mobile/1767649468.webp) | [![preview](/.previews/subjects/Touhou/mobile/1767719876.webp)](/wallpapers/subjects/Touhou/mobile/1767719876.webp) |
-| [![preview](/.previews/subjects/Touhou/mobile/1767998214.webp)](/wallpapers/subjects/Touhou/mobile/1767998214.webp) |   |   |
+| [![preview](/.previews/subjects/Touhou/mobile/1767998214.webp)](/wallpapers/subjects/Touhou/mobile/1767998214.webp) | [![preview](/.previews/subjects/Touhou/mobile/1773781278.webp)](/wallpapers/subjects/Touhou/mobile/1773781278.webp) |   |
 
 Здесь находится хвостик автоматической генерации. Спасибо за просмотр! 👾
 <!-- END GENERATED -->
