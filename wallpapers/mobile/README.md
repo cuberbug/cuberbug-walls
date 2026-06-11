@@ -47,7 +47,8 @@
 | [![preview](/.previews/mobile/1767094086.webp)](/wallpapers/mobile/1767094086.webp) | [![preview](/.previews/mobile/1767094117.webp)](/wallpapers/mobile/1767094117.webp) | [![preview](/.previews/mobile/1767112710.webp)](/wallpapers/mobile/1767112710.webp) |
 | [![preview](/.previews/mobile/1767116385.webp)](/wallpapers/mobile/1767116385.webp) | [![preview](/.previews/mobile/1767123543.webp)](/wallpapers/mobile/1767123543.webp) | [![preview](/.previews/mobile/1767174341.webp)](/wallpapers/mobile/1767174341.webp) |
 | [![preview](/.previews/mobile/1767174566.webp)](/wallpapers/mobile/1767174566.webp) | [![preview](/.previews/mobile/1767176878.webp)](/wallpapers/mobile/1767176878.webp) | [![preview](/.previews/mobile/1767550277.webp)](/wallpapers/mobile/1767550277.webp) |
-| [![preview](/.previews/mobile/1767649025.webp)](/wallpapers/mobile/1767649025.webp) | [![preview](/.previews/mobile/1769189510.webp)](/wallpapers/mobile/1769189510.webp) |   |
+| [![preview](/.previews/mobile/1767649025.webp)](/wallpapers/mobile/1767649025.webp) | [![preview](/.previews/mobile/1769189510.webp)](/wallpapers/mobile/1769189510.webp) | [![preview](/.previews/mobile/1781171815.webp)](/wallpapers/mobile/1781171815.webp) |
+| [![preview](/.previews/mobile/1781172061.webp)](/wallpapers/mobile/1781172061.webp) | [![preview](/.previews/mobile/1781172605.webp)](/wallpapers/mobile/1781172605.webp) |   |
 
 Здесь находится хвостик автоматической генерации. Спасибо за просмотр! 👾
 <!-- END GENERATED -->
