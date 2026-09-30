@@ -14,7 +14,8 @@ set -o pipefail
 
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC_DIR="$SCRIPT_DIR/launcher"
+readonly SCRIPT_DIR
+readonly SRC_DIR="$SCRIPT_DIR/launcher"
 
 # shellcheck source=launcher/ui.sh
 source "$SRC_DIR/ui.sh"

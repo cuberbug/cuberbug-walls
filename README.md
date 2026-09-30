@@ -17,12 +17,12 @@
 
 ➤ **🏠 Главная**
 
-| 📚 subjects | 🖥️ desktop | 📱 mobile | ☁️ other | 🐾 | 🎨 artists |
-| :--- | :--- | :--- | :--- | :---: | :--- |
-| **Общее** | [portrait](/wallpapers/desktop/portrait/README.md) | [mobile](/wallpapers/mobile/README.md) | [other](/wallpapers/other/README.md) | 🐾 | [Grym3ik](/wallpapers/artists/Grym3ik/README.md) |
-|  | [scene](/wallpapers/desktop/scene/README.md) |  |  | 🐾 | [HOJI](/wallpapers/artists/HOJI/README.md) |
-| **Touhou** | [desktop](/wallpapers/subjects/Touhou/desktop/README.md) | [mobile](/wallpapers/subjects/Touhou/mobile/README.md) |  | 🐾 | [Nakkar7](/wallpapers/artists/Nakkar7/README.md) |
-| **Vocaloid** | [desktop](/wallpapers/subjects/Vocaloid/desktop/README.md) | [mobile](/wallpapers/subjects/Vocaloid/mobile/README.md) |  | 🐾 |  |
+| 📚 subjects  | 🖥️ desktop                                                 | 📱 mobile                                 | ☁️ other                             | 🐾 | 🎨 artists                                       |
+| ------------ | ---------------------------------------------------------- | ----------------------------------------- | ----------------------------------   | --- | :---------------------------------------------- |
+| **Общее**    | [portrait](/wallpapers/desktop/portrait/README.md)         | [mobile](/wallpapers/mobile/README.md)    | [other](/wallpapers/other/README.md) | 🐾 | [Grym3ik](/wallpapers/artists/Grym3ik/README.md) |
+|              | [scene](/wallpapers/desktop/scene/README.md)               |                                           |                                      | 🐾 | [HOJI](/wallpapers/artists/HOJI/README.md)       |
+| **Touhou**   | [desktop](/wallpapers/subjects/Touhou/desktop/README.md)   | [mobile](/wallpapers/subjects/Touhou/mobile/README.md)   |                       | 🐾 | [Nakkar7](/wallpapers/artists/Nakkar7/README.md) |
+| **Vocaloid** | [desktop](/wallpapers/subjects/Vocaloid/desktop/README.md) | [mobile](/wallpapers/subjects/Vocaloid/mobile/README.md) |                       | 🐾 |                                                  |
 
 
 ### 🐾 А где?
@@ -132,13 +132,11 @@ sudo apt install python3-venv
 * <img src="https://kde.org/stuff/clipart/logo/kde-logo-white-gray-128x128.png" width="18" height="18"> KDE Plasma
 * <img src="https://gitlab.gnome.org/GNOME/gnome-boxes-logos/-/raw/master/logos/gnome-logo.svg" width="18" height="18"> GNOME
 * 🐁 XFCE
-<!-- * <img src="https://projects.linuxmint.com/icons/projects/cinnamon-logo.svg" width="18" height="18"> Cinnamon -->
-<!-- * <img src="https://cdn11.bigcommerce.com/s-pywjnxrcr2/product_images/system76_logo-fav-32x32.png" width="18" height="18"> COSMIC -->
 
 ## ⚙️ **Repo-Tools**
 
 [**Repo-Tools**](https://github.com/cuberbug/repo-tools) — это отдельный репозиторий с набором инструментов, подключающийся сюда посредством установки сабмодуля.
-Для этого достаточно запустить `tool-launcher` — он всё сделает сам, а содержимое репозитория **Repo-Tools** окажется в директории `tools/`, после чего будет запущен скрипт `tools/start`, который предложет автоматически установить виртуальное окружение Python вместе с зависимостями и предложит запустить интерактивное TUI-меню, в котором доступен запуск любого из инструментов.
+Для этого достаточно запустить `tool-launcher` — он всё сделает сам, а содержимое репозитория **Repo-Tools** окажется в директории `tools/`, после чего будет запущен скрипт `tools/start`, который предложит установить виртуальное окружение Python вместе с зависимостями и запустить интерактивное TUI-меню, в котором доступен запуск любого из инструментов.
 
 ### 🐾 Menu
 
