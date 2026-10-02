@@ -30,21 +30,25 @@ update_submodule() {
   # 1. Получаем "логическое имя" сабмодуля по его пути.
   # Это нужно, чтобы правильно писать в конфиг git.
   local sub_name
-  sub_name=$(git -C "$repo_root" submodule status "$sub_path" |
-             sed 's/^.[0-9a-f]* //;s/ .*//')
+  sub_name=$(
+    git -C "$repo_root" submodule status "$sub_path" \
+      | sed 's/^.[0-9a-f]* //;s/ .*//'
+  )
   
   # Если сабмодуль еще не инициализирован, status может не вернуть имя. 
   # В таком случае берем имя из .gitmodules напрямую.
   if [[ -z "$sub_name" ]]; then
-      sub_name=$(git -C "$repo_root" config --file .gitmodules --get-regexp path |
-                 grep " $sub_path$" |
-                 awk '{print $1}' |
-                 sed 's/submodule\.//;s/\.path//')
+    sub_name=$(
+      git -C "$repo_root" config --file .gitmodules --get-regexp path \
+        | grep " $sub_path$" \
+        | awk '{print $1}' \
+        | sed 's/submodule\.//;s/\.path//'
+    )
   fi
 
   if [[ -z "$sub_name" ]]; then
-      e_error "Не удалось определить имя сабмодуля для пути $sub_path"
-      return 1
+    e_error "Не удалось определить имя сабмодуля для пути $sub_path"
+    return 1
   fi
 
   # 2. Переопределяем ветку в локальном конфиге (.git/config)
@@ -59,6 +63,9 @@ update_submodule() {
     return 1
   fi
 
-  e_done "$(f_green "Сабмодуль $(f_bold "$sub_path") успешно обновлен до" \
-         "$(f_bold "origin $target_branch")")"
+  local message
+  message="Сабмодуль $(f_bold "$sub_path") успешно обновлен до $(f_bold "origin $target_branch")."
+  message="$(f_green "$message")"
+
+  e_done "$message"
 }
