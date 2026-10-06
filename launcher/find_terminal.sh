@@ -22,7 +22,7 @@ set -o pipefail
 #   1 — ошибка аргументов или отсутствующий файл
 # =============================
 run_in_terminal() {
-  local path_to_script=$1; shift
+  local path_to_script="$1"; shift
   local target_args=("$@")
   local terminal
   local term_name

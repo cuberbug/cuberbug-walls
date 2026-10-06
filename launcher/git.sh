@@ -16,9 +16,9 @@ set -o pipefail
 #   1 — аргументы не переданы или не удалось обновить сабмодуль.
 # =============================
 update_submodule() {
-  local sub_path=$1
-  local repo_root=$2
-  local target_branch=${3:-"main"}
+  local sub_path="$1"
+  local repo_root="$2"
+  local target_branch="${3:-"main"}"
 
   if [[ -z "$sub_path" || -z "$repo_root" ]]; then
     p_error "update_submodule требует минимум 2 аргумента."
