@@ -22,7 +22,7 @@ set -o pipefail
 #   1 — ошибка аргументов или отсутствующий файл
 # =============================
 run_in_terminal() {
-  local path_to_script=$1; shift
+  local path_to_script="$1"; shift
   local target_args=("$@")
   local terminal
   local term_name
@@ -30,19 +30,19 @@ run_in_terminal() {
   local args=()
 
   if [[ ! -f "$path_to_script" ]]; then
-    e_error "Файл $(f_bold "$path_to_script") не существует."
+    p_error "Файл $(f_bold "$path_to_script") не существует."
     return 1
   fi
 
-  terminal=$(get_terminal)
+  terminal="$(get_terminal)"
   if [[ -z "$terminal" ]]; then
-    e_error "Не удалось найти поддерживаемый эмулятор терминала."
-    exit 1
+    p_error "Не удалось найти поддерживаемый эмулятор терминала."
+    return 1
   fi
 
   # Извлекаем чистое имя (например, /usr/bin/konsole -> konsole)
   term_name="${terminal##*/}"
-  flag=$(get_term_flag "$term_name")
+  flag="$(get_term_flag "$term_name")"
 
   # Формируем массив аргументов
   if [[ -n "$flag" ]]; then
@@ -51,9 +51,9 @@ run_in_terminal() {
     args=("$path_to_script")
   fi
 
-  e_done "Запуск $(f_bold "$path_to_script") в новом окне ($(f_bold "$term_name"))..."
+  p_done "Запуск $(f_bold "$path_to_script") в новом окне ($(f_bold "$term_name"))..."
   # target_args не будет пуст, так как в режиме отладки содержит --debug или -d
-  e_debug "Выполняется команда: $(f_bold "$terminal ${args[*]} ${target_args[*]}")"
+  p_debug "Выполняется команда: $(f_bold "$terminal ${args[*]} ${target_args[*]}")"
 
   "$terminal" "${args[@]}" "${target_args[@]}"
 }
@@ -78,18 +78,18 @@ get_terminal() {
     terminal=$(get_terminal_for_de "$de")
 
     if [[ -n "$terminal" ]]; then
-      e_debug "Для $(f_bold "$de") используется терминал: $(f_bold "$terminal")"
+      p_debug "Для $(f_bold "$de") используется терминал: $(f_bold "$terminal")"
       echo "$terminal"
       return 0
     fi
   fi
 
-  e_debug "Не удалось определить DE или терминал для него. Перебор списка по умолчанию..."
+  p_debug "Не удалось определить DE или терминал для него. Перебор списка по умолчанию..."
 
   # Если DE пользователя не поддерживается
   for terminal in "${DEFAULT_TERMINALS[@]}"; do
     if command -v "$terminal" &>/dev/null; then
-      e_debug "Найден терминал из списка: $(f_bold "$terminal")"
+      p_debug "Найден терминал из списка: $(f_bold "$terminal")"
       echo "$terminal"
       return 0
     fi
@@ -115,7 +115,7 @@ get_terminal() {
 # =============================
 get_term_flag() {
   if [[ $# -ne 1 ]]; then
-    e_error "$(f_bold "get_term_flag") требует 1 аргумент — название терминала."
+    p_error "$(f_bold "get_term_flag") требует 1 аргумент — название терминала."
     return 1
   fi
 
@@ -139,12 +139,15 @@ get_term_flag() {
       flag="-e"
       ;;
     *)
-      e_debug "$(f_yellow "Неизвестный терминал $(f_bold "$term_name")," \
-              "используется стандартный флаг -e")"
       flag="-e"
+
+      local message
+      message="Неизвестный терминал $(f_bold "$term_name"). Используется стандартный флаг -e."
+      message="$(f_yellow "$message")"
+      p_debug "$message"
       ;;
   esac
-  e_debug "get_term_flag: [$flag]"
+  p_debug "get_term_flag: [$flag]"
 
   # Необходимо для корректной передачи флагов, которые echo может интерпретировать как опцию
   printf "%s" "$flag"
