@@ -3,7 +3,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-VERSION="1.3.3"
+VERSION="1.3.4"
 
 
 # =============================
@@ -72,8 +72,8 @@ EOF
 # Приоритет: флаг CLI > переменная окружения.
 # =============================
 init_format() {
-  BOLD="\e[1m"
-  NO_BOLD="\e[22m"
+  BOLD="\033[1m"
+  NO_BOLD="\033[22m"
 
   # Логика: Если флаг цвета НЕ был явно установлен через CLI (значение 0)
   # И в окружении присутствует переменная NO_COLOR -> отключаем цвет.
@@ -84,11 +84,11 @@ init_format() {
   fi
 
   if [[ "$USE_COLOR" -eq 1 ]]; then
-    RED="\e[31m"
-    GREEN="\e[32m"
-    YELLOW="\e[33m"
-    BLUE="\e[34m"
-    CANCEL_COLOR="\e[39m"
+    RED="\033[31m"
+    GREEN="\033[32m"
+    YELLOW="\033[33m"
+    BLUE="\033[34m"
+    CANCEL_COLOR="\033[39m"
   else
     RED=""
     GREEN=""
@@ -110,13 +110,13 @@ init_format() {
 #   - f_blue:   синий
 #
 # Функции для вывода стилизованных информационных сообщений:
-#   - e_info:   о происходящих событиях
-#   - e_done:   об успешном выполнении действия
-#   - e_error:  об ошибке
-#   - e_debug:  информация для отладки
+#   - p_info:   о происходящих событиях
+#   - p_done:   об успешном выполнении действия
+#   - p_error:  об ошибке
+#   - p_debug:  информация для отладки
 #
 # Пример использования:
-#   e_info "Вывод $(f_red "красного") и $(f_green "зелёного") текста"
+#   p_info "Вывод $(f_red "красного") и $(f_green "зелёного") текста"
 # =============================
 
 f_bold()   { _format "$BOLD"   "$NO_BOLD"      "$@"; }
@@ -125,46 +125,48 @@ f_green()  { _format "$GREEN"  "$CANCEL_COLOR" "$@"; }
 f_yellow() { _format "$YELLOW" "$CANCEL_COLOR" "$@"; }
 f_blue()   { _format "$BLUE"   "$CANCEL_COLOR" "$@"; }
 
-e_info() {
+p_info() {
   local message=("$@")
   local icon="●"
 
-  icon=$(f_bold "$icon")
-  icon=$(f_blue "$icon")
+  icon="$(f_bold "$icon")"
+  icon="$(f_blue "$icon")"
   printf " %s %s\n" "${icon}" "${message[*]}" >&2
 }
 
-e_done() {
+p_done() {
   local message=("$@")
   local icon="✔"
 
-  icon=$(f_bold "$icon")
-  icon=$(f_green "$icon")
+  icon="$(f_bold "$icon")"
+  icon="$(f_green "$icon")"
   printf " %s %s\n" "${icon}" "${message[*]}" >&2
 }
 
-e_error() {
+p_error() {
   local message=("$@")
   local icon="ERROR"
 
-  icon=$(f_bold "$icon")
-  icon=$(f_red "$icon")
+  icon="$(f_bold "$icon")"
+  icon="$(f_red "$icon")"
   printf "[ %s ] %s\n" "$icon" "${message[*]}" >&2
 }
 
-e_debug() {
+p_debug() {
+  if [[ ! -v DEBUG ]]; then
+    return 0
+  fi
+
   local message=("$@")
   local icon="DEBUG"
 
-  if [[ -v DEBUG ]]; then
-    icon=$(f_yellow "$icon")
-    printf "[ %s ] %s\n" "$icon" "${message[*]}" >&2
-  fi
+  icon="$(f_yellow "$icon")"
+  printf "[ %s ] %s\n" "$icon" "${message[*]}" >&2
 }
 
 _format() {
-  local start_code=$1
-  local end_code=$2
+  local start_code="$1"
+  local end_code="$2"
   shift 2
 
   printf "%b%s%b" "$start_code" "$*" "$end_code"

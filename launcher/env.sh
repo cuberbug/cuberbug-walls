@@ -10,7 +10,8 @@ unset DEBUG
 unset NO_WINDOW
 unset USE_COLOR_SET_BY_CLI
 unset TOOLS_BRANCH
-unset TARGET_ARGS
+
+declare -g -a TARGET_ARGS=()
 
 
 # =============================
@@ -68,10 +69,10 @@ init_env() {
   _init_debug_env
   _init_terminal_list
 
-  e_debug "Запуск инициализации окружения..."
+  p_debug "Запуск инициализации окружения..."
 
   if ! command -v git >/dev/null 2>&1; then
-    e_error "Не найден git. Установите его, чтобы использовать этот скрипт."
+    p_error "Не найден git. Установите его, чтобы использовать этот скрипт."
     exit 1
   fi
 
@@ -82,11 +83,11 @@ init_env() {
   TARGET_BRANCH="${TOOLS_BRANCH:-main}"
 
 
-  e_debug "Переменные окружения подготовлены."
-  e_debug "Рабочая директория: $(f_bold "$SCRIPT_DIR")"
-  e_debug "Целевая ветка tools: $(f_bold "$TARGET_BRANCH")"
-  e_debug "Целевой скрипт: $(f_bold "$TARGET_SCRIPT")"
-  e_debug "Аргументы для передачи: $(f_bold "${TARGET_ARGS[*]:-none}")"
+  p_debug "Переменные окружения подготовлены."
+  p_debug "Рабочая директория: $(f_bold "$SCRIPT_DIR")"
+  p_debug "Целевая ветка tools: $(f_bold "$TARGET_BRANCH")"
+  p_debug "Целевой скрипт: $(f_bold "$TARGET_SCRIPT")"
+  p_debug "Аргументы для передачи: $(f_bold "${TARGET_ARGS[*]:-none}")"
 }
 
 
