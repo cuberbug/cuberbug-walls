@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+
 set -o errexit
 set -o nounset
 set -o pipefail
 
-VERSION="1.3.4"
+VERSION='1.3.5'
 
 
 # =============================
@@ -54,9 +55,9 @@ EOF
 
 show_hello() {
   cat <<EOF
-  :::::::::::::::::::
- ::: Tool Launcher :::
-:::::::::::::::: v$VERSION
+===============================
+:::::::: Tool Launcher ::::::::
+:::::::::::::::::::::::: v$VERSION
 
 EOF
 }
@@ -69,32 +70,23 @@ EOF
 #
 # Если в переменных окружения пользователя задано NO_COLOR или скрипт запущен
 # с ключами -N или --no-color, то отключает использование цветного вывода.
-# Приоритет: флаг CLI > переменная окружения.
 # =============================
 init_format() {
-  BOLD="\033[1m"
-  NO_BOLD="\033[22m"
+  BOLD=$'\033[1m'
+  NO_BOLD=$'\033[22m'
 
-  # Логика: Если флаг цвета НЕ был явно установлен через CLI (значение 0)
-  # И в окружении присутствует переменная NO_COLOR -> отключаем цвет.
-  if [[ "${USE_COLOR_SET_BY_CLI:-0}" -eq 0 && -v NO_COLOR ]]; then
-    USE_COLOR=0
-    # Подготавливаем ключ для передачи в целевой скрипт
-    TARGET_ARGS+=("--no-color")
-  fi
-
-  if [[ "$USE_COLOR" -eq 1 ]]; then
-    RED="\033[31m"
-    GREEN="\033[32m"
-    YELLOW="\033[33m"
-    BLUE="\033[34m"
-    CANCEL_COLOR="\033[39m"
+  if ! is_no_color; then
+    RED=$'\033[31m'
+    GREEN=$'\033[32m'
+    YELLOW=$'\033[33m'
+    BLUE=$'\033[34m'
+    CANCEL_COLOR=$'\033[39m'
   else
-    RED=""
-    GREEN=""
-    YELLOW=""
-    BLUE=""
-    CANCEL_COLOR=""
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    CANCEL_COLOR=''
   fi
 }
 
@@ -127,41 +119,41 @@ f_blue()   { _format "$BLUE"   "$CANCEL_COLOR" "$@"; }
 
 p_info() {
   local message=("$@")
-  local icon="●"
+  local icon='●'
 
   icon="$(f_bold "$icon")"
   icon="$(f_blue "$icon")"
-  printf " %s %s\n" "${icon}" "${message[*]}" >&2
+  printf ' %s %s\n' "$icon" "${message[*]}" >&2
 }
 
 p_done() {
   local message=("$@")
-  local icon="✔"
+  local icon='✔'
 
   icon="$(f_bold "$icon")"
   icon="$(f_green "$icon")"
-  printf " %s %s\n" "${icon}" "${message[*]}" >&2
+  printf ' %s %s\n' "$icon" "${message[*]}" >&2
 }
 
 p_error() {
   local message=("$@")
-  local icon="ERROR"
+  local icon='[ ERROR ]'
 
   icon="$(f_bold "$icon")"
   icon="$(f_red "$icon")"
-  printf "[ %s ] %s\n" "$icon" "${message[*]}" >&2
+  printf '%s %s\n' "$icon" "${message[*]}" >&2
 }
 
 p_debug() {
-  if [[ ! -v DEBUG ]]; then
+  if ! is_debug; then
     return 0
   fi
 
   local message=("$@")
-  local icon="DEBUG"
+  local icon='[ DEBUG ]'
 
   icon="$(f_yellow "$icon")"
-  printf "[ %s ] %s\n" "$icon" "${message[*]}" >&2
+  printf '%s %s\n' "$icon" "${message[*]}" >&2
 }
 
 _format() {
@@ -169,5 +161,5 @@ _format() {
   local end_code="$2"
   shift 2
 
-  printf "%b%s%b" "$start_code" "$*" "$end_code"
+  printf '%s%s%s' "$start_code" "$*" "$end_code"
 }

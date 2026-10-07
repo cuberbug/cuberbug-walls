@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 set -o errexit
 set -o nounset
 set -o pipefail
@@ -36,7 +37,7 @@ run_in_terminal() {
 
   terminal="$(get_terminal)"
   if [[ -z "$terminal" ]]; then
-    p_error "Не удалось найти поддерживаемый эмулятор терминала."
+    p_error 'Не удалось найти поддерживаемый эмулятор терминала.'
     return 1
   fi
 
@@ -74,23 +75,23 @@ get_terminal() {
   local de
   local terminal
 
-  if de=$(detect_de); then
+  if de="$(detect_de)"; then
     terminal=$(get_terminal_for_de "$de")
 
     if [[ -n "$terminal" ]]; then
       p_debug "Для $(f_bold "$de") используется терминал: $(f_bold "$terminal")"
-      echo "$terminal"
+      printf '%s' "$terminal"
       return 0
     fi
   fi
 
-  p_debug "Не удалось определить DE или терминал для него. Перебор списка по умолчанию..."
+  p_debug 'Не удалось определить DE или терминал для него. Перебор списка по умолчанию...'
 
   # Если DE пользователя не поддерживается
   for terminal in "${DEFAULT_TERMINALS[@]}"; do
     if command -v "$terminal" &>/dev/null; then
       p_debug "Найден терминал из списка: $(f_bold "$terminal")"
-      echo "$terminal"
+      printf '%s' "$terminal"
       return 0
     fi
   done
@@ -115,7 +116,7 @@ get_terminal() {
 # =============================
 get_term_flag() {
   if [[ $# -ne 1 ]]; then
-    p_error "$(f_bold "get_term_flag") требует 1 аргумент — название терминала."
+    p_error "$(f_bold 'get_term_flag') требует 1 аргумент — название терминала."
     return 1
   fi
 
@@ -124,22 +125,22 @@ get_term_flag() {
 
   case "$term_name" in
     gnome-terminal|gnome-console|tilix)
-      flag="--"
+      flag='--'
       ;;
     terminator|xfce4-terminal)
-      flag="-x"
+      flag='-x'
       ;;
     kitty)
-      flag=""
+      flag=''
       ;;
     mate-terminal)
-      flag="-e"
+      flag='-e'
       ;;
     konsole|alacritty|xterm|urxvt|rxvt|st)
-      flag="-e"
+      flag='-e'
       ;;
     *)
-      flag="-e"
+      flag='-e'
 
       local message
       message="Неизвестный терминал $(f_bold "$term_name"). Используется стандартный флаг -e."
@@ -150,5 +151,5 @@ get_term_flag() {
   p_debug "get_term_flag: [$flag]"
 
   # Необходимо для корректной передачи флагов, которые echo может интерпретировать как опцию
-  printf "%s" "$flag"
+  printf '%s' "$flag"
 }

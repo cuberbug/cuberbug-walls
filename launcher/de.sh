@@ -5,14 +5,14 @@ set -o pipefail
 
 
 declare -A DETECTORS=(
-  ["KDE Plasma"]=is_kde
-  ["GNOME"]=is_gnome
-  ["XFCE"]=is_xfce
+  ['KDE Plasma']=is_kde
+  ['GNOME']=is_gnome
+  ['XFCE']=is_xfce
 )
 declare -A TERMINAL_GETTERS=(
-  ["KDE Plasma"]=get_kde_default_terminal
-  ["GNOME"]=get_gnome_default_terminal
-  ["XFCE"]=get_xfce_default_terminal
+  ['KDE Plasma']=get_kde_default_terminal
+  ['GNOME']=get_gnome_default_terminal
+  ['XFCE']=get_xfce_default_terminal
 )
 
 
@@ -48,7 +48,7 @@ detect_de() {
     # Запускаем функцию проверки, имя которой лежит в DETECTORS["$de"].
     # Если функция возвращает успешный код (0), значит мы нашли нужное DE.
     if "${DETECTORS["$de"]}"; then
-      echo "$de"
+      printf '%s' "$de"
       return 0
     fi
   done
@@ -75,29 +75,25 @@ detect_de() {
 # =============================
 get_terminal_for_de() {
   if [[ $# -ne 1 ]]; then
-    p_error "$(f_bold "get_terminal_for_de") требует 1 аргумент — название DE."
+    p_error "$(f_bold 'get_terminal_for_de') требует 1 аргумент — название DE."
     return 1
   fi
 
   local de="$1"
-  local getter_func
+  local getter_func="${TERMINAL_GETTERS["$de"]:-}"
   local term_path
 
-  getter_func="${TERMINAL_GETTERS["$de"]}"
-
   if [[ -z "$getter_func" ]]; then
-    p_debug "Для окружения '$de' нет определенной функции поиска терминала."
+    p_debug "Для окружения $de нет определенной функции поиска терминала."
     return 1
   fi
 
-  if term_path=$("$getter_func"); then
-    if [[ -n "$term_path" ]]; then
-      echo "$term_path"
-      return 0
-    fi
+  if term_path=$("$getter_func") && [[ -n "$term_path" ]]; then
+    printf '%s' "$term_path"
+    return 0
   fi
 
-  p_debug "DE пользователя не поддерживается, либо его не удалось определить."
+  p_debug 'DE пользователя не поддерживается, либо его не удалось определить.'
   return 1
 }
 
@@ -112,12 +108,12 @@ get_terminal_for_de() {
 # =============================
 
 is_kde() {
-  if [[ "${XDG_CURRENT_DESKTOP:-}" == *"KDE"* ]] \
-    || [[ "${DESKTOP_SESSION:-}" == "plasma" ]] \
-    || [[ "${KDE_FULL_SESSION:-}" == "true" ]] \
-    || pgrep -x "plasmashell" >/dev/null 2>&1; then
+  if [[ "${XDG_CURRENT_DESKTOP:-}" == *'KDE'* ]] \
+    || [[ "${DESKTOP_SESSION:-}" == 'plasma' ]] \
+    || [[ "${KDE_FULL_SESSION:-}" == 'true' ]] \
+    || pgrep -x 'plasmashell' >/dev/null 2>&1; then
 
-    p_debug "Обнаружено окружение: $(f_bold "KDE Plasma")"
+    p_debug "Обнаружено окружение: $(f_bold 'KDE Plasma')"
     return 0
   fi
 
@@ -127,11 +123,11 @@ is_kde() {
 is_gnome() {
   local desktop_env="${XDG_CURRENT_DESKTOP:-}"
 
-  if [[ "$desktop_env" == *"GNOME"* ]] \
-    || [[ "${DESKTOP_SESSION:-}" == "gnome" ]] \
-    || pgrep -x "gnome-shell" >/dev/null 2>&1; then
+  if [[ "$desktop_env" == *'GNOME'* ]] \
+    || [[ "${DESKTOP_SESSION:-}" == 'gnome' ]] \
+    || pgrep -x 'gnome-shell' >/dev/null 2>&1; then
 
-    p_debug "Обнаружено окружение: $(f_bold "GNOME")"
+    p_debug "Обнаружено окружение: $(f_bold 'GNOME')"
     return 0
   fi
 
@@ -139,11 +135,11 @@ is_gnome() {
 }
 
 is_xfce() {
-  if [[ "${XDG_CURRENT_DESKTOP:-}" == *"XFCE"* ]] \
-    || [[ "${DESKTOP_SESSION:-}" == "xfce" ]] \
-    || pgrep -fx "xfce4-session" >/dev/null 2>&1; then
+  if [[ "${XDG_CURRENT_DESKTOP:-}" == *'XFCE'* ]] \
+    || [[ "${DESKTOP_SESSION:-}" == 'xfce' ]] \
+    || pgrep -fx 'xfce4-session' >/dev/null 2>&1; then
 
-    p_debug "Обнаружено окружение: $(f_bold "XFCE")"
+    p_debug "Обнаружено окружение: $(f_bold 'XFCE')"
     return 0
   fi
 
@@ -161,14 +157,14 @@ is_xfce() {
 # =============================
 
 get_kde_default_terminal() {
-  local de="KDE Plasma"
+  local de='KDE Plasma'
   local term_path
   local kconfig_cmd
 
   if command -v kreadconfig6 >/dev/null 2>&1; then
-    kconfig_cmd="kreadconfig6"
+    kconfig_cmd='kreadconfig6'
   elif command -v kreadconfig5 >/dev/null 2>&1; then
-    kconfig_cmd="kreadconfig5"
+    kconfig_cmd='kreadconfig5'
   fi
 
   if [[ -n "$kconfig_cmd" ]]; then
@@ -177,19 +173,19 @@ get_kde_default_terminal() {
 
     if [[ -n "$term_path" ]]; then
       p_debug "Конфигурация вернула: $(f_green "$term_path")"
-      echo "$term_path"
+      printf '%s' "$term_path"
       return 0
     else
-      p_debug "Ключ $(f_bold "TerminalApplication") пуст или не найден."
+      p_debug "Ключ $(f_bold 'TerminalApplication') пуст или не найден."
     fi
   else
-    p_debug "Утилиты $(f_bold "kreadconfig") не найдены."
+    p_debug "Утилиты $(f_bold 'kreadconfig') не найдены."
   fi
 
   # Попытка вернуть дефолт для KDE
   if term_path="$(command -v konsole)" && [[ -n "$term_path" ]]; then
     p_debug "Возврат дефолтного терминала для $(f_bold "$de")"
-    echo "$term_path"
+    printf '%s' "$term_path"
     return 0
   fi
 
@@ -198,7 +194,7 @@ get_kde_default_terminal() {
 }
 
 get_gnome_default_terminal() {
-  local de="GNOME"
+  local de='GNOME'
   local term_path
 
   if command -v gsettings >/dev/null 2>&1; then
@@ -210,18 +206,18 @@ get_gnome_default_terminal() {
     if [[ -n "$term_path" ]]; then
       if command -v "$term_path" &>/dev/null; then
         p_debug "gsettings вернул: $(f_green "$term_path")"
-        echo "$term_path"
+        printf '%s' "$term_path"
         return 0
       fi
     fi
   else
-    p_debug "Утилита $(f_bold "gsettings") не найдена."
+    p_debug "Утилита $(f_bold 'gsettings') не найдена."
   fi
 
   # Попытка вернуть дефолт для GNOME
   if term_path="$(command -v gnome-terminal)" && [[ -n "$term_path" ]]; then
     p_debug "Возврат дефолтного терминала для $(f_bold "$de")"
-    echo "$term_path"
+    printf '%s' "$term_path"
     return 0
   fi
 
@@ -230,7 +226,7 @@ get_gnome_default_terminal() {
 }
 
 get_xfce_default_terminal() {
-  local de="XFCE"
+  local de='XFCE'
   local config_file="$HOME/.config/xfce4/helpers.rc"
   local term_path
 
@@ -242,22 +238,22 @@ get_xfce_default_terminal() {
         | cut -d'=' -f2 \
         || true
       )
-    p_debug "Найдено значение $(f_bold "TerminalEmulator"): $(f_green "$term_path")"
+    p_debug "Найдено значение $(f_bold 'TerminalEmulator'): $(f_green "$term_path")"
   else
     p_debug "Файл конфигурации $(f_bold "$config_file") не найден."
   fi
 
   # Проверяем значения из 'helpers.rc'
   if [[ -n "$term_path" ]] && command -v "$term_path" >/dev/null 2>&1; then
-    p_debug "$(f_bold "helpers.rc") вернул: $(f_green "$term_path")"
-    echo "$term_path"
+    p_debug "$(f_bold 'helpers.rc') вернул: $(f_green "$term_path")"
+    printf '%s' "$term_path"
     return 0
   # Или 'custom-TerminalEmulator.desktop'
   elif [[ "$term_path" == "custom-TerminalEmulator" ]]; then
     local custom_helper="$HOME/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop"
 
     p_debug \
-      "Обнаружен $(f_bold "custom-TerminalEmulator")," \
+      "Обнаружен $(f_bold 'custom-TerminalEmulator')," \
       "запуск проверки: $(f_bold "$custom_helper")"
 
     if [[ -f "$custom_helper" ]]; then
@@ -272,8 +268,8 @@ get_xfce_default_terminal() {
       p_debug "Извлечена команда из desktop-файла: $(f_bold "$custom_cmd")"
 
       if [[ -n "$custom_cmd" ]] && command -v "$custom_cmd" >/dev/null 2>&1; then
-        p_debug "$(f_bold "custom-TerminalEmulator.desktop") вернул: $(f_green "$custom_cmd")"
-        echo "$custom_cmd"
+        p_debug "$(f_bold 'custom-TerminalEmulator.desktop') вернул: $(f_green "$custom_cmd")"
+        printf '%s' "$custom_cmd"
         return 0
       fi
     fi
@@ -282,7 +278,7 @@ get_xfce_default_terminal() {
   # Попытка вернуть дефолт для XFCE
   if term_path="$(command -v xfce4-terminal)" && [[ -n "$term_path" ]]; then
     p_debug "Возврат дефолтного терминала для $(f_bold "$de")"
-    echo "$term_path"
+    printf '%s' "$term_path"
     return 0
   fi
 
