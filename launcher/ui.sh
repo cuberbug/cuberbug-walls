@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-VERSION='1.3.5'
+VERSION='1.3.6'
 
 
 # =============================
@@ -117,6 +117,14 @@ f_green()  { _format "$GREEN"  "$CANCEL_COLOR" "$@"; }
 f_yellow() { _format "$YELLOW" "$CANCEL_COLOR" "$@"; }
 f_blue()   { _format "$BLUE"   "$CANCEL_COLOR" "$@"; }
 
+_format() {
+  local start_code="$1"
+  local end_code="$2"
+  shift 2
+
+  printf '%s%s%s' "$start_code" "$*" "$end_code"
+}
+
 p_info() {
   local message=("$@")
   local icon='●'
@@ -154,12 +162,4 @@ p_debug() {
 
   icon="$(f_yellow "$icon")"
   printf '%s %s\n' "$icon" "${message[*]}" >&2
-}
-
-_format() {
-  local start_code="$1"
-  local end_code="$2"
-  shift 2
-
-  printf '%s%s%s' "$start_code" "$*" "$end_code"
 }

@@ -23,7 +23,9 @@ update_submodule() {
   local sub_name
 
   if [[ -z "$sub_path" || -z "$repo_root" ]]; then
-    p_error 'update_submodule требует минимум 2 аргумента.'
+    p_error \
+    'update_submodule требует минимум 2 аргумента:' \
+    'путь к сабмодулю и корневую директорию репозитория.'
     return 1
   fi
 

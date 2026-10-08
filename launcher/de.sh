@@ -84,7 +84,7 @@ get_terminal_for_de() {
   local term_path
 
   if [[ -z "$getter_func" ]]; then
-    p_debug "Для окружения $de нет определенной функции поиска терминала."
+    p_debug "Для окружения $(f_bold "$de") нет определенной функции поиска терминала."
     return 1
   fi
 
@@ -249,7 +249,7 @@ get_xfce_default_terminal() {
     printf '%s' "$term_path"
     return 0
   # Или 'custom-TerminalEmulator.desktop'
-  elif [[ "$term_path" == "custom-TerminalEmulator" ]]; then
+  elif [[ "$term_path" == 'custom-TerminalEmulator' ]]; then
     local custom_helper="$HOME/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop"
 
     p_debug \
