@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 set -o errexit
 set -o nounset
 set -o pipefail
@@ -12,16 +13,19 @@ set -o pipefail
 # $3 — (опционально) ветка, на которую нужно переключиться (по умолчанию "main")
 #
 # Код возврата:
-#   0 — сабмобуль успешно обновлён.
+#   0 — сабмодуль успешно обновлён.
 #   1 — аргументы не переданы или не удалось обновить сабмодуль.
 # =============================
 update_submodule() {
   local sub_path="$1"
   local repo_root="$2"
-  local target_branch="${3:-"main"}"
+  local target_branch="${3:-main}"
+  local sub_name
 
   if [[ -z "$sub_path" || -z "$repo_root" ]]; then
-    p_error "update_submodule требует минимум 2 аргумента."
+    p_error \
+    'update_submodule требует минимум 2 аргумента:' \
+    'путь к сабмодулю и корневую директорию репозитория.'
     return 1
   fi
 
