@@ -1,62 +1,40 @@
 #!/usr/bin/env bash
-
-set -o errexit
-set -o nounset
-set -o pipefail
+#
+# /launcher/find_terminal.sh
 
 
 # =============================
-# Запуск скрипта в новом окне терминала
+# Сборка команды для запуска скрипта в новом окне терминала
 # -----------------------------
-# Запускает указанный исполняемый файл в новом окне терминала.
+# Заполняет массив (по имени, через nameref), ничего не запускает.
 #
 # Параметры:
-#   $1 — путь к исполняемому файлу (обязательно)
-#   $@ — аргументы для передачи в целевой скрипт
+#   $1 — имя массива, в который будет записана команда
+#   $2 — путь к исполняемому файлу
+#   $@ — аргументы для целевого скрипта
 #
-# Определяет терминал по умолчанию через get_terminal()
-# и подбирает корректный ключ запуска (-e, -x или --),
-# так как разные эмуляторы терминала используют разные варианты.
-#
-# Возвращает:
-#   0 — успешный запуск
-#   1 — ошибка аргументов или отсутствующий файл
+# Возвращает: 0 — команда собрана, 1 — ошибка
 # =============================
-run_in_terminal() {
+build_terminal_cmd() {
+  local -n _btc_out="$1"; shift
   local path_to_script="$1"; shift
-  local target_args=("$@")
   local terminal
   local term_name
   local flag
-  local args=()
 
-  if [[ ! -f "$path_to_script" ]]; then
-    p_error "Файл $(f_bold "$path_to_script") не существует."
-    return 1
-  fi
-
-  terminal="$(get_terminal)"
-  if [[ -z "$terminal" ]]; then
+  if ! terminal="$(get_terminal)"; then
     p_error 'Не удалось найти поддерживаемый эмулятор терминала.'
     return 1
   fi
 
-  # Извлекаем чистое имя (например, /usr/bin/konsole -> konsole)
   term_name="${terminal##*/}"
   flag="$(get_term_flag "$term_name")"
 
-  # Формируем массив аргументов
+  _btc_out=("$terminal")
   if [[ -n "$flag" ]]; then
-    args=("$flag" "$path_to_script")
-  else
-    args=("$path_to_script")
+    _btc_out+=("$flag")
   fi
-
-  p_done "Запуск $(f_bold "$path_to_script") в новом окне ($(f_bold "$term_name"))..."
-  # target_args не будет пуст, так как в режиме отладки содержит --debug или -d
-  p_debug "Выполняется команда: $(f_bold "$terminal ${args[*]} ${target_args[*]}")"
-
-  "$terminal" "${args[@]}" "${target_args[@]}"
+  _btc_out+=("$path_to_script" "$@")
 }
 
 
@@ -75,14 +53,14 @@ get_terminal() {
   local de
   local terminal
 
-  if de="$(detect_de)"; then
-    terminal=$(get_terminal_for_de "$de")
+  if \
+    de="$(detect_de)" \
+    && terminal="$(get_terminal_for_de "$de")" \
+    && [[ -n "$terminal" ]]; then
 
-    if [[ -n "$terminal" ]]; then
-      p_debug "Для $(f_bold "$de") используется терминал: $(f_bold "$terminal")"
-      printf '%s' "$terminal"
-      return 0
-    fi
+    p_debug "Для $(f_bold "$de") используется терминал: $(f_bold "$terminal")"
+    printf '%s' "$terminal"
+    return 0
   fi
 
   p_debug 'Не удалось определить DE или терминал для него. Перебор списка по умолчанию...'

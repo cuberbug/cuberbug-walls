@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
+#
+# /launcher/ui.sh
+#
+# Зависит от: /launcher/env.sh (is_no_color)
 
-set -o errexit
-set -o nounset
-set -o pipefail
+readonly LAUNCHER_VERSION='1.3.7'
 
-VERSION='1.3.6'
+BOLD='' NO_BOLD=''
+RED='' GREEN='' YELLOW='' BLUE=''
+CANCEL_COLOR=''
 
 
 # =============================
@@ -18,7 +22,7 @@ VERSION='1.3.6'
 show_help() {
   cat <<EOF
 Tool Launcher — универсальный менеджер установки и запуска утилит.
-Версия: $VERSION
+Версия: $LAUNCHER_VERSION
 
 Описание:
   Скрипт проверяет и обновляет сабмодуль 'tools' до указанной ветки,
@@ -29,7 +33,7 @@ Tool Launcher — универсальный менеджер установки
   эти параметры будут переданы в целевой скрипт.
 
 Использование:
-  $(basename "$0") [опции]
+  ${0##*/} [опции]
 
 Опции:
   -b, --branch NAME   Установить конкретную ветку для сабмодуля tools
@@ -43,10 +47,10 @@ Tool Launcher — универсальный менеджер установки
   -v, --version       Показать версию скрипта
 
 Примеры:
-  ./$(basename "$0")
+  ./${0##*/}
       Стандартный запуск (ветка main).
 
-  ./$(basename "$0") --branch dev
+  ./${0##*/} --branch dev
       Запуск с переключением инструментов на ветку dev
       (полезно для тестирования новых функций).
 
@@ -57,7 +61,7 @@ show_hello() {
   cat <<EOF
 ===============================
 :::::::: Tool Launcher ::::::::
-:::::::::::::::::::::::: v$VERSION
+:::::::::::::::::::::::: v$LAUNCHER_VERSION
 
 EOF
 }
@@ -71,23 +75,25 @@ EOF
 # Если в переменных окружения пользователя задано NO_COLOR или скрипт запущен
 # с ключами -N или --no-color, то отключает использование цветного вывода.
 # =============================
+# shellcheck disable=SC2034
 init_format() {
+  # Пожелание пользователя: передаётся дальше в целевой скрипт
+  if [[ -n "${NO_COLOR:-}" ]]; then
+    LAUNCHER_NO_COLOR=1
+  fi
+
+  # Локальное решение: форматировать ли вывод лаунчера (он идёт в stderr)
+  if is_no_color || [[ ! -t 2 ]] || [[ "${TERM:-}" == 'dumb' ]]; then
+    return 0
+  fi
+
   BOLD=$'\033[1m'
   NO_BOLD=$'\033[22m'
-
-  if ! is_no_color; then
-    RED=$'\033[31m'
-    GREEN=$'\033[32m'
-    YELLOW=$'\033[33m'
-    BLUE=$'\033[34m'
-    CANCEL_COLOR=$'\033[39m'
-  else
-    RED=''
-    GREEN=''
-    YELLOW=''
-    BLUE=''
-    CANCEL_COLOR=''
-  fi
+  RED=$'\033[31m'
+  GREEN=$'\033[32m'
+  YELLOW=$'\033[33m'
+  BLUE=$'\033[34m'
+  CANCEL_COLOR=$'\033[39m'
 }
 
 
@@ -126,30 +132,24 @@ _format() {
 }
 
 p_info() {
-  local message=("$@")
   local icon='●'
 
-  icon="$(f_bold "$icon")"
-  icon="$(f_blue "$icon")"
-  printf ' %s %s\n' "$icon" "${message[*]}" >&2
+  icon="${BLUE}${BOLD}$icon${NO_BOLD}${CANCEL_COLOR}"
+  printf ' %s %s\n' "$icon" "$*" >&2
 }
 
 p_done() {
-  local message=("$@")
   local icon='✔'
 
-  icon="$(f_bold "$icon")"
-  icon="$(f_green "$icon")"
-  printf ' %s %s\n' "$icon" "${message[*]}" >&2
+  icon="${GREEN}${BOLD}$icon${NO_BOLD}${CANCEL_COLOR}"
+  printf ' %s %s\n' "$icon" "$*" >&2
 }
 
 p_error() {
-  local message=("$@")
   local icon='[ ERROR ]'
 
-  icon="$(f_bold "$icon")"
-  icon="$(f_red "$icon")"
-  printf '%s %s\n' "$icon" "${message[*]}" >&2
+  icon="${RED}${BOLD}$icon${NO_BOLD}${CANCEL_COLOR}"
+  printf '%s %s\n' "$icon" "$*" >&2
 }
 
 p_debug() {
@@ -157,9 +157,8 @@ p_debug() {
     return 0
   fi
 
-  local message=("$@")
   local icon='[ DEBUG ]'
 
-  icon="$(f_yellow "$icon")"
-  printf '%s %s\n' "$icon" "${message[*]}" >&2
+  icon="${YELLOW}${BOLD}$icon${NO_BOLD}${CANCEL_COLOR}"
+  printf '%s %s\n' "$icon" "$*" >&2
 }
