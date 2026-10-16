@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
+# =============================================================================
+# /launcher/env.sh
+# -----------------------------------------------------------------------------
+# Инициализация переменных окружения и конфигурации скрипта
+#
+# Зависимости:
+#   ./ui.sh: p_debug, p_error, f_bold, f_green
+# =============================================================================
 
-set -o errexit
-set -o nounset
-set -o pipefail
 
-: "${DEBUG:=0}"
-: "${NO_WINDOW:=0}"
-: "${NO_COLOR:=0}"
-
-: "${DEBUG_FORCE_WINDOW:=0}"
-: "${REPO_TOOLS_PATH:=}"
+LAUNCHER_DEBUG=0
+LAUNCHER_NO_WINDOW=0
+LAUNCHER_NO_COLOR=0
 
 unset TOOLS_BRANCH
 
@@ -37,11 +39,11 @@ parse_args() {
         fi
         shift
         ;;
-      -N|--no-color) NO_COLOR=1; shift ;;
-      -W|--no-window) NO_WINDOW=1; shift ;;
-      -d|--debug) DEBUG=1; shift ;;
+      -N|--no-color) LAUNCHER_NO_COLOR=1; shift ;;
+      -W|--no-window) LAUNCHER_NO_WINDOW=1; shift ;;
+      -d|--debug) LAUNCHER_DEBUG=1; shift ;;
       -h|--help|help) show_help; exit 0 ;;
-      -v|--version) printf 'v%s\n' "$VERSION"; exit 0 ;;
+      -v|--version) printf 'v%s\n' "$LAUNCHER_VERSION"; exit 0 ;;
       -*)
         printf 'Неизвестная опция: %s. Используйте --help для справки.\n' "$1" >&2
         exit 1
@@ -58,48 +60,48 @@ parse_args() {
 # =============================
 # Проверяет, включен ли режим отладки.
 # -----------------------------
-# Переменная DEBUG должна содержать:
+# Переменная LAUNCHER_DEBUG должна содержать:
 #   0 — режим отладки выключен.
 #   1 — режим отладки включен.
 #
 # Код возврата:
-#   0 — если DEBUG=1.
-#   1 — если DEBUG=0.
+#   0 — если LAUNCHER_DEBUG=1.
+#   1 — если LAUNCHER_DEBUG=0.
 # =============================
 is_debug() {
-  [[ "$DEBUG" -eq 1 ]]
+  [[ "$LAUNCHER_DEBUG" -eq 1 ]]
 }
 
 
 # =============================
 # Проверяет, включен ли режим без цвета.
 # -----------------------------
-# Переменная NO_COLOR должна содержать:
+# Переменная LAUNCHER_NO_COLOR должна содержать:
 #   0 — цветной вывод включен.
 #   1 — цветной вывод отключен.
 #
 # Код возврата:
-#   0 — если NO_COLOR=1.
-#   1 — если NO_COLOR=0.
+#   0 — если LAUNCHER_NO_COLOR=1.
+#   1 — если LAUNCHER_NO_COLOR=0.
 # =============================
 is_no_color() {
-  [[ "$NO_COLOR" -eq 1 ]]
+  [[ "$LAUNCHER_NO_COLOR" -eq 1 ]]
 }
 
 
 # =============================
 # Проверяет, включен ли режим без нового окна терминала.
 # -----------------------------
-# Переменная NO_WINDOW должна содержать:
+# Переменная LAUNCHER_NO_WINDOW должна содержать:
 #   0 — запуск в новом окне терминала разрешен.
 #   1 — запуск в новом окне терминала запрещен.
 #
 # Код возврата:
-#   0 — если NO_WINDOW=1.
-#   1 — если NO_WINDOW=0.
+#   0 — если LAUNCHER_NO_WINDOW=1.
+#   1 — если LAUNCHER_NO_WINDOW=0.
 # =============================
 is_no_window() {
-  [[ "$NO_WINDOW" -eq 1 ]]
+  [[ "$LAUNCHER_NO_WINDOW" -eq 1 ]]
 }
 
 
@@ -111,33 +113,8 @@ is_no_window() {
 #   1 — если обнаружены ошибки.
 # =============================
 validate_environment() {
-  if [[ "$DEBUG" != '0' && "$DEBUG" != '1' ]]; then
-    p_error 'DEBUG должен быть равен 0 или 1.'
-    return 1
-  fi
-
-  if [[ "$NO_WINDOW" != '0' && "$NO_WINDOW" != '1' ]]; then
-    p_error 'NO_WINDOW должен быть равен 0 или 1.'
-    return 1
-  fi
-
   if ! command -v git >/dev/null 2>&1; then
     p_error 'Не найден git. Установите его, чтобы использовать этот скрипт.'
-    return 1
-  fi
-}
-
-
-# =============================
-# Проверка переменной NO_COLOR
-# -----------------------------
-# Код возврата:
-#   0 — если значение допустимо.
-#   1 — если обнаружено недопустимое значение.
-# =============================
-validate_no_color() {
-  if [[ "$NO_COLOR" != '0' && "$NO_COLOR" != '1' ]]; then
-    p_error 'NO_COLOR должен быть равен 0 или 1.'
     return 1
   fi
 }
@@ -155,26 +132,30 @@ _assert_module_deps() {
     p_error 'Модуль инициализирован некорректно: переменная SCRIPT_DIR не задана главным файлом.'
     return 1
   fi
+
+  if [[ -z "${LAUNCHER_VERSION:-}" ]]; then
+    p_error 'Модуль инициализирован некорректно: переменная LAUNCHER_VERSION не задана.'
+    return 1
+  fi
 }
 
 
 # =============================
 # Управляет поведением режима отладки
 # -----------------------------
-# Если DEBUG=1, то:
-#   - DEBUG_FORCE_WINDOW=1 — принудительно открывать новый терминал.
-#   - DEBUG_FORCE_WINDOW=0 — не открывать новый терминал.
-# Если DEBUG=0, то:
-#   - DEBUG_FORCE_WINDOW=0 — не открывать новый терминал.
-#   - DEBUG_FORCE_WINDOW=1 — игнорируется, так как режим отладки выключен.
-# Код возврата:
-#   0 — если DEBUG=1 и DEBUG_FORCE_WINDOW=1.
-#   1 — если DEBUG=0 или DEBUG_FORCE_WINDOW=0.
+# Выставляет значение для DEBUG_FORCE_WINDOW:
+#   1 — по умолчанию
+#   0 — если пользователь указал --no-window
 # =============================
 _init_debug_env() {
+  if ! is_debug; then
+    return 0
+  fi
+
   DEBUG_FORCE_WINDOW=1
 
   if is_no_window; then
+    # shellcheck disable=SC2034  # используется в главном скрипте
     DEBUG_FORCE_WINDOW=0
   fi
 }
@@ -185,16 +166,25 @@ _init_debug_env() {
 # -----------------------------
 # Инициализирует список терминалов, который используется в случае,
 # если не удалось определить терминал по умолчанию в DE пользователя.
+#
+# Порядок задаёт приоритет: выбирается первый установленный терминал.
+# Сначала идут терминалы популярных DE, затем независимые от DE,
+# последним — универсальный xterm.
+#
+# Каждый терминал из списка должен быть описан в get_term_flag,
+# иначе для него будет использован флаг по умолчанию (-e).
 # =============================
 # shellcheck disable=SC2034
 _init_terminal_list() {
   declare -g -a DEFAULT_TERMINALS=(
     'konsole'        # Многофункциональный терминал для среды KDE
     'gnome-terminal' # Стандартный терминал для среды GNOME
-    'gnome-console'  # Легковесный терминал для GNOME, замена gnome-terminal
+    'ptyxis'         # Современный терминал GNOME (по умолчанию в новых Fedora)
+    'kgx'            # GNOME Console (пакет gnome-console): простой терминал для GNOME
     'xfce4-terminal' # Легковесный терминал, идущий в комплекте с XFCE
     'kitty'          # Быстрый, настраиваемый терминал с поддержкой GPU
-    'alacritty'      # Легковесный, высокопроизводительный терминал с акцентом на простоту
+    'alacritty'      # Минималистичный терминал с GPU-ускорением
+    'foot'           # Лёгкий и быстрый терминал для Wayland
     'xterm'          # Классический, минималистичный терминал для X Window System
   )
 }
@@ -214,10 +204,12 @@ init_env() {
   p_debug 'Запуск инициализации окружения...'
 
   REPO_ROOT="$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)"
-  TARGET_SCRIPT="${REPO_ROOT}/tools/start"
+  readonly REPO_ROOT
+  readonly TARGET_SCRIPT="${REPO_ROOT}/tools/start"
 
-  REPO_TOOLS_PATH='tools'
-  TARGET_BRANCH="${TOOLS_BRANCH:-main}"
+  # shellcheck disable=SC2034  # используется в главном скрипте
+  readonly REPO_TOOLS_PATH='tools'
+  readonly TARGET_BRANCH="${TOOLS_BRANCH:-main}"
 
   p_debug 'Переменные окружения подготовлены.'
   p_debug "Рабочая директория: $(f_bold "$SCRIPT_DIR")"

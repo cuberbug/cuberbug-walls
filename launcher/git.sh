@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
-
-set -o errexit
-set -o nounset
-set -o pipefail
+# =============================================================================
+# /launcher/git.sh
+# -----------------------------------------------------------------------------
+# Работа с сабмодулем 'tools' и другими репозиториями.
+#
+# Зависимости:
+#   ./env.sh: REPO_TOOLS_PATH, REPO_ROOT, TARGET_BRANCH
+#   ./ui.sh: p_debug, p_error, f_bold, f_green
+# =============================================================================
 
 
 # =============================
@@ -32,7 +37,7 @@ update_submodule() {
   p_info "Для сабмодуля $(f_bold "$sub_path") будет использована ветка $(f_bold "$target_branch")."
 
   # 1. Получаем "логическое имя" сабмодуля по его пути.
-  sub_name=$(
+  sub_name="$(
     git \
       -C "$repo_root" \
       config \
@@ -40,7 +45,7 @@ update_submodule() {
       --get-regexp '^submodule\..*\.path$' "^${sub_path}$" 2>/dev/null \
       | sed -E 's/^submodule\.(.*)\.path .*$/\1/' \
       || true
-  )
+  )"
 
   if [[ -z "$sub_name" ]]; then
     p_error "Не удалось определить имя сабмодуля для пути $sub_path"
