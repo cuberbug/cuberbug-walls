@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
-#
+# =============================================================================
 # /launcher/find_terminal.sh
+# -----------------------------------------------------------------------------
+# Поиск терминала по умолчанию для запуска скрипта в новом окне.
+#
+# Зависимости:
+#   ./de.sh: detect_de, get_terminal_for_de
+#   ./ui.sh: p_debug, p_error, f_bold, f_green
+# =============================================================================
 
 
 # =============================
@@ -102,19 +109,16 @@ get_term_flag() {
   local flag
 
   case "$term_name" in
-    gnome-terminal|gnome-console|tilix)
+    gnome-terminal|tilix|ptyxis)
       flag='--'
       ;;
-    terminator|xfce4-terminal)
+    terminator|xfce4-terminal|mate-terminal)
       flag='-x'
       ;;
-    kitty)
+    kitty|foot)
       flag=''
       ;;
-    mate-terminal)
-      flag='-e'
-      ;;
-    konsole|alacritty|xterm|urxvt|rxvt|st)
+    konsole|alacritty|xterm|urxvt|rxvt|st|kgx)
       flag='-e'
       ;;
     *)

@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
-#
+# =============================================================================
 # /launcher/ui.sh
+# -----------------------------------------------------------------------------
+# Функции для вывода текста в терминал с форматированием.
 #
-# Зависит от: /launcher/env.sh (is_no_color)
+# Зависимости:
+#   ./env.sh: is_no_color, is_debug, LAUNCHER_NO_COLOR, LAUNCHER_DEBUG
+# =============================================================================
 
-readonly LAUNCHER_VERSION='1.3.7'
+
+readonly LAUNCHER_VERSION='1.3.8'
 
 BOLD='' NO_BOLD=''
 RED='' GREEN='' YELLOW='' BLUE=''
@@ -59,9 +64,9 @@ EOF
 
 show_hello() {
   cat <<EOF
-===============================
-:::::::: Tool Launcher ::::::::
-:::::::::::::::::::::::: v$LAUNCHER_VERSION
+# =============
+# Tool Launcher
+# ===== v$LAUNCHER_VERSION
 
 EOF
 }
