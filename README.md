@@ -3,7 +3,7 @@
 ## 🐾 Что это такое?
 
 **Коллекция обоев для рабочего стола** и пространство экспериментов в автоматизации и программировании!  
-Здесь вы сможете как насладиться красивыми изображениями, так и попробовать набор инструментов, написанных специально для удобного управления этим репозиторием.
+Здесь есть много красивых и эстетичных изображений, shell-скрипты и мультитул с TUI интерфейсом, написанный на Python.
 
 ## 🐾 Навигация по галерее
 <div align="center">
@@ -62,7 +62,7 @@ git clone --depth 1 https://github.com/cuberbug/cuberbug-walls.git
 ```shell
 git clone --filter=blob:none --no-checkout --depth=1 https://github.com/cuberbug/cuberbug-walls.git
 cd cuberbug-walls
-git sparse-checkout set wallpapers/mobile # Директория с обоями для телефонов, например
+git sparse-checkout set wallpapers/mobile  # Директория с обоями для телефонов, например
 git checkout
 ```
 
@@ -81,9 +81,9 @@ git checkout
 
 # 🛠️ Инструменты
 
->Сразу после клонирования директория `tools/` будет пуста: всё так и должно быть! Если вам не хочется устанавливать инструменты — просто не запускайте `tool-launcher`.
+>Сразу после клонирования директория `tools/` будет пуста: всё так и должно быть! Если вам не хочется устанавливать инструменты — просто не запускайте `tools-launcher`.
 
-Чтобы начать пользоваться инструментами, запустите скрипт `tool-launcher` из корня репозитория (например, `tool-launcher`). Он всё сделает сам:
+Чтобы начать пользоваться инструментами, запустите скрипт `tools-launcher` из корня репозитория (например, `./tools-launcher`). Он всё сделает сам:
 
 * **Автоматически** загрузит или обновит набор инструментов **cuberbug-walls-tools** в директорию `tools/`.
 * **Запустит TUI-меню** (`tools/start`) в новом окне терминала, если вы запустили его двойным кликом (тихий режим), или прямо в текущем, если запустили его командой в терминале.
@@ -94,7 +94,7 @@ git checkout
 
 ### 🐾 Технические детали
 
-`tool-launcher` поддерживает использование опций:
+`tools-launcher` поддерживает использование опций:
 
 * `--help`: покажет справочную информацию
 * `--version`: покажет версию скрипта
@@ -105,20 +105,20 @@ git checkout
 
 ```shell
 # Запуск в режиме отладки с бесцветным выводом
-./tool-launcher --debug --no-color
+./tools-launcher --debug --no-color
 
-# Запуска утилит из dev ветки
-./tool-launcher --branch dev
+# Запуск утилит из dev ветки
+./tools-launcher --branch dev
 ```
 
 #### 🐾 Тихий режим
 
-Если вы запустили `tool-launcher` двойным кликом, он автоматически определит ваш **Desktop Environment** или переберёт список поддерживаемых терминалов, чтобы открыть TUI-меню в новом окне.
+Если вы запустили `tools-launcher` двойным кликом, он автоматически определит ваш **Desktop Environment** или переберёт список поддерживаемых терминалов, чтобы открыть TUI-меню в новом окне.
 
 ## 🐾 Зависимости
 
-* <img src="https://www.svgrepo.com/show/303548/git-icon-logo.svg" width="18" height="18"> [Git](https://git-scm.com)
-* <img src="https://www.svgrepo.com/show/452091/python.svg" width="18" height="18"> [Python](https://www.python.org) ≥ 3.10
+* <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" width="18" height="18"> [Git](https://git-scm.com)
+* <img src="https://s3.dualstack.us-east-2.amazonaws.com/pythondotorg-assets/media/files/python-logo-only.svg" width="18" height="18"> [Python](https://www.python.org) ≥ 3.10
 
 ### 🐾 Debian / Ubuntu
 
@@ -136,7 +136,7 @@ sudo apt install python3-venv
 ## ⚙️ **cuberbug-walls-tools**
 
 [**cuberbug-walls-tools**](https://github.com/cuberbug/cuberbug-walls-tools) — это отдельный репозиторий с набором инструментов, подключающийся сюда посредством установки сабмодуля.
-Для этого достаточно запустить `tool-launcher` — он всё сделает сам, а содержимое репозитория **cuberbug-walls-tools** окажется в директории `tools/`, после чего будет запущен скрипт `tools/start`, который предложит установить виртуальное окружение Python вместе с зависимостями и запустить интерактивное TUI-меню, в котором доступен запуск любого из инструментов.
+Для этого достаточно запустить `tools-launcher` — он всё сделает сам, а содержимое репозитория **cuberbug-walls-tools** окажется в директории `tools/`, после чего будет запущен скрипт `tools/start`, который предложит установить виртуальное окружение Python вместе с зависимостями и запустить интерактивное TUI-меню, в котором доступен запуск любого из инструментов.
 
 ### 🐾 Menu
 

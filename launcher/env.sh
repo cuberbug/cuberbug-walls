@@ -155,8 +155,10 @@ _init_debug_env() {
   DEBUG_FORCE_WINDOW=1
 
   if is_no_window; then
-    # shellcheck disable=SC2034  # используется в главном скрипте
     DEBUG_FORCE_WINDOW=0
+    p_debug \
+      'Используется режим с запретом открытия нового окна:' \
+      "DEBUG_FORCE_WINDOW=$DEBUG_FORCE_WINDOW"
   fi
 }
 
@@ -207,13 +209,13 @@ init_env() {
   readonly REPO_ROOT
   readonly TARGET_SCRIPT="${REPO_ROOT}/tools/start"
 
-  # shellcheck disable=SC2034  # используется в главном скрипте
   readonly REPO_TOOLS_PATH='tools'
   readonly TARGET_BRANCH="${TOOLS_BRANCH:-main}"
 
   p_debug 'Переменные окружения подготовлены.'
   p_debug "Рабочая директория: $(f_bold "$SCRIPT_DIR")"
-  p_debug "Целевая ветка tools: $(f_bold "$TARGET_BRANCH")"
+  p_debug "Имя директории для установки сабмодуля: $(f_bold "$REPO_TOOLS_PATH")"
+  p_debug "Целевая ветка сабмодуля: $(f_bold "$TARGET_BRANCH")"
   p_debug "Целевой скрипт: $(f_bold "$TARGET_SCRIPT")"
   p_debug "Аргументы для передачи: $(f_bold "${TARGET_ARGS[*]:-none}")"
 }

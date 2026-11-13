@@ -9,7 +9,7 @@
 # =============================================================================
 
 
-readonly LAUNCHER_VERSION='1.3.8'
+readonly LAUNCHER_VERSION='1.3.9'
 
 BOLD='' NO_BOLD=''
 RED='' GREEN='' YELLOW='' BLUE=''
@@ -26,7 +26,7 @@ CANCEL_COLOR=''
 
 show_help() {
   cat <<EOF
-Tool Launcher — универсальный менеджер установки и запуска утилит.
+Submodule Launcher — устанавливает сабмодуль и запускает находящиеся в нём утилиты.
 Версия: $LAUNCHER_VERSION
 
 Описание:
@@ -64,10 +64,7 @@ EOF
 
 show_hello() {
   cat <<EOF
-# =============
-# Tool Launcher
-# ===== v$LAUNCHER_VERSION
-
+========= cuberbug-walls: Submodule Launcher / v$LAUNCHER_VERSION
 EOF
 }
 
