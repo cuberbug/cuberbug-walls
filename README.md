@@ -118,6 +118,7 @@ git checkout
 ## 🐾 Зависимости
 
 * <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" width="18" height="18"> [Git](https://git-scm.com)
+  * `less` — консальная утилита для отображения текста, поиска и навигации по нему. Является опциональной зависимостью для `git`, нужна для работы `git log` и `git diff`.
 * <img src="https://s3.dualstack.us-east-2.amazonaws.com/pythondotorg-assets/media/files/python-logo-only.svg" width="18" height="18"> [Python](https://www.python.org) ≥ 3.10
 
 ### 🐾 Debian / Ubuntu
