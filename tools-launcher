@@ -13,19 +13,48 @@ set -o nounset
 set -o pipefail
 
 
+# =============================
+# Определение путей и подключение библиотек
+# =============================
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly SCRIPT_DIR
-readonly SRC_DIR="$SCRIPT_DIR/launcher"
+readonly SRC_DIR="$SCRIPT_DIR/src/launcher"
 
-# shellcheck source=launcher/ui.sh
+# Список модулей для проверки наличия файлов перед подключением.
+# При добавлении модуля нужно обновить его и блок source ниже.
+readonly _LAUNCHER_MODULES=(
+  'ui'             # Вывод, форматирование, справка
+  'env'            # Аргументы CLI, инициализация окружения
+  'git'            # Работа с сабмодулем 'tools' и другими репозиториями
+  'find_terminal'  # Поиск терминала
+  'de'             # Определение DE
+)
+
+_missing=()
+for _module in "${_LAUNCHER_MODULES[@]}"; do
+  if [[ ! -r "${SRC_DIR}/${_module}.sh" ]]; then
+    _missing+=("${SRC_DIR}/${_module}.sh")
+  fi
+done
+
+if (( ${#_missing[@]} > 0 )); then
+  printf 'Ошибка: не найдены модули:\n' >&2
+  printf '  %s\n' "${_missing[@]}" >&2
+  exit 1
+fi
+unset _module _missing
+
+
+# shellcheck source=src/launcher/ui.sh
 source "$SRC_DIR/ui.sh"
-# shellcheck source=launcher/env.sh
+# shellcheck source=src/launcher/env.sh
 source "$SRC_DIR/env.sh"
-# shellcheck source=launcher/git.sh
+# shellcheck source=src/launcher/git.sh
 source "$SRC_DIR/git.sh"
-# shellcheck source=launcher/find_terminal.sh
+# shellcheck source=src/launcher/find_terminal.sh
 source "$SRC_DIR/find_terminal.sh"
-# shellcheck source=launcher/de.sh
+# shellcheck source=src/launcher/de.sh
 source "$SRC_DIR/de.sh"
 
 
