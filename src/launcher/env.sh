@@ -180,18 +180,18 @@ _init_debug_env() {
 # Каждый терминал из списка должен быть описан в get_term_flag,
 # иначе для него будет использован флаг по умолчанию (-e).
 # =============================
-# shellcheck disable=SC2034
 _init_terminal_list() {
+  # shellcheck disable=SC2034  # используется в ./find_terminal.sh: get_terminal
   declare -g -a DEFAULT_TERMINALS=(
-    'konsole'        # Многофункциональный терминал для среды KDE
-    'gnome-terminal' # Стандартный терминал для среды GNOME
-    'ptyxis'         # Современный терминал GNOME (по умолчанию в новых Fedora)
-    'kgx'            # GNOME Console (пакет gnome-console): простой терминал для GNOME
-    'xfce4-terminal' # Легковесный терминал, идущий в комплекте с XFCE
-    'kitty'          # Быстрый, настраиваемый терминал с поддержкой GPU
-    'alacritty'      # Минималистичный терминал с GPU-ускорением
-    'foot'           # Лёгкий и быстрый терминал для Wayland
-    'xterm'          # Классический, минималистичный терминал для X Window System
+    'konsole'         # Многофункциональный терминал для среды KDE
+    'gnome-terminal'  # Стандартный терминал для среды GNOME
+    'ptyxis'          # Современный терминал GNOME (по умолчанию в новых Fedora)
+    'kgx'             # GNOME Console (пакет gnome-console): простой терминал для GNOME
+    'xfce4-terminal'  # Легковесный терминал, идущий в комплекте с XFCE
+    'kitty'           # Быстрый, настраиваемый терминал с поддержкой GPU
+    'alacritty'       # Минималистичный терминал с GPU-ускорением
+    'foot'            # Лёгкий и быстрый терминал для Wayland
+    'xterm'           # Классический, минималистичный терминал для X Window System
   )
 }
 

@@ -6,6 +6,7 @@
 #
 # Зависимости:
 #   ./de.sh: detect_de, get_terminal_for_de
+#   ./env.sh: DEFAULT_TERMINALS
 #   ./ui.sh: p_debug, p_error, f_bold, f_green
 # =============================================================================
 
