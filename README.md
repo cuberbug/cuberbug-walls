@@ -75,7 +75,7 @@ git checkout
 * [ImageMagick](https://github.com/nihui/waifu2x-ncnn-vulkan) для создания превью
 * [waifu2x-ncnn-vulkan](https://github.com/nihui/waifu2x-ncnn-vulkan) для апскейлинга
 
-Для автоматической генерации таблиц с превью используется скрипт `src/tables_generator.py` и GitHub Actons. Он активируется после обновления директории с превью, которая управляется мною при помощи локальных скриптов.
+Для автоматической генерации таблиц с превью используется скрипт `src/tables_generator.py`.
 
 ---
 
@@ -118,6 +118,7 @@ git checkout
 ## 🐾 Зависимости
 
 * <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" width="18" height="18"> [Git](https://git-scm.com)
+  * `less` — консальная утилита для отображения текста, поиска и навигации по нему. Является опциональной зависимостью для `git`, нужна для работы `git log` и `git show`.
 * <img src="https://s3.dualstack.us-east-2.amazonaws.com/pythondotorg-assets/media/files/python-logo-only.svg" width="18" height="18"> [Python](https://www.python.org) ≥ 3.10
 
 ### 🐾 Debian / Ubuntu

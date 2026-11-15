@@ -1,0 +1,11 @@
+name: Am a poo?
+
+on:
+  workflow_dispatch:
+
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print greeting
+        run: echo "Oops! It is poo..."

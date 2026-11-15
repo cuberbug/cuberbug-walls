@@ -221,7 +221,7 @@ def main() -> None:
     """
     # Определяем путь к конфигу относительно скрипта
     file_dir = Path(__file__).resolve().parent
-    config_path = file_dir.parent / TableGenerator.CONFIG_NAME
+    config_path = file_dir / TableGenerator.CONFIG_NAME
 
     # Инициализация и запуск
     try:
