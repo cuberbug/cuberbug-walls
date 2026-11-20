@@ -1,4 +1,4 @@
-[🏠 Главная](../README.md) | [CONTRIBUTING.md](./CONTRIBUTING.md)
+[🏠 Главная](/README.md) | [CONTRIBUTING.md](/.github/CONTRIBUTING.md)
 
 # Стиль кода
 
